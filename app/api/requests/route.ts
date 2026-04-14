@@ -101,12 +101,10 @@ export async function POST(request: NextRequest) {
         });
       }
     } else {
-      // Autres types → Notifier  et ADMIN
+      // Autres types → Notifier ADMIN
       const backOfficeAndAdmins = await prisma.user.findMany({
         where: {
-          role: {
-            in: [, 'ADMIN']
-          }
+          role: 'ADMIN'
         },
       });
 
