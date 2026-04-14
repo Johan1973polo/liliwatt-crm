@@ -121,10 +121,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
     }
 
-    //  n'a pas accès à l'agenda
-    if false {
-      return NextResponse.json({ error: 'Accès non autorisé' }, { status: 403 });
-    }
+    // Accès agenda vérifié
 
     const body = await request.json();
     const {

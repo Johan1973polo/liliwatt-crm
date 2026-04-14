@@ -113,8 +113,6 @@ export async function POST(request: NextRequest) {
         authorName = 'Administration';
       } else if (currentUser?.role === 'REFERENT') {
         authorName = 'Référent';
-      } else if (currentUser?.role ===) {
-        authorName = 'Back-Office';
       }
 
       const activity = await prisma.teamActivity.create({

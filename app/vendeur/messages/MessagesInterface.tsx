@@ -182,9 +182,6 @@ export default function MessagesInterface({
                   } else if (senderRole === 'ADMIN') {
                     bgColor = 'bg-danger'; // Rouge
                     textColor = 'text-white';
-                  } else if (senderRole ===) {
-                    bgColor = 'bg-success'; // Vert
-                    textColor = 'text-white';
                   }
 
                   return (

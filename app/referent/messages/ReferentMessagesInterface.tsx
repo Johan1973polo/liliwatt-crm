@@ -129,8 +129,6 @@ export default function ReferentMessagesInterface({
       if (isVendeur) {
         if (currentUserRole === 'REFERENT') {
           category = 'REFERENT';
-        } else if (currentUserRole ===) {
-          category = 'BACKOFFICE';
         }
       }
 
@@ -442,9 +440,6 @@ export default function ReferentMessagesInterface({
                     textColor = 'text-dark';
                   } else if (senderRole === 'ADMIN') {
                     bgColor = 'bg-danger'; // Rouge
-                    textColor = 'text-white';
-                  } else if (senderRole ===) {
-                    bgColor = 'bg-purple'; // Violet
                     textColor = 'text-white';
                   }
 

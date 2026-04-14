@@ -29,7 +29,6 @@ export async function POST(
     // Vérifier les permissions
     const canAccess =
       session.user.role === 'ADMIN' ||
-      session.user.role === ||
       credential.userId === session.user.id || // Peut révéler ses propres credentials
       (session.user.role === 'REFERENT' &&
         credential.user.role === 'VENDEUR' &&

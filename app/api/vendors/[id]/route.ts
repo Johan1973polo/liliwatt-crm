@@ -20,7 +20,7 @@ export async function PUT(
   // Vérifier les permissions
   if (session.user.role === 'ADMIN') {
     // Admin peut tout modifier
-   else if (session.user.role === 'REFERENT') {
+  } else if (session.user.role === 'REFERENT') {
     // Référent peut modifier uniquement ses vendeurs
     const vendor = await prisma.user.findUnique({
       where: { id: vendorId },
@@ -103,7 +103,7 @@ export async function DELETE(
   // Vérifier les permissions
   if (session.user.role === 'ADMIN') {
     // Admin peut tout supprimer
-   else if (session.user.role === 'REFERENT') {
+  } else if (session.user.role === 'REFERENT') {
     // Référent peut supprimer uniquement ses vendeurs
     const vendor = await prisma.user.findUnique({
       where: { id: vendorId },

@@ -288,9 +288,6 @@ export default function AdminMessagesInterface({
                       } else if (senderRole === 'ADMIN') {
                         bgColor = 'bg-danger'; // Rouge
                         textColor = 'text-white';
-                      } else if (senderRole ===) {
-                        bgColor = 'bg-purple'; // Violet
-                        textColor = 'text-white';
                       }
 
                       return (

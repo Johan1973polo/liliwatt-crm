@@ -32,8 +32,6 @@ export default function Navbar({
     switch (role) {
       case 'ADMIN':
         return 'Administrateur';
-      case:
-        return 'Back-Office';
       case 'REFERENT':
         return 'Référent';
       case 'VENDEUR':
@@ -86,20 +84,7 @@ export default function Navbar({
   };
 
   const getNavLinks = () => {
-    if (userRole ===) {
-      return [
-        { href: '/backoffice', label: 'Dashboard', icon: 'bi-house-door' },
-        { href: '/backoffice/demandes', label: 'Demandes', icon: 'bi-clipboard2-check' },
-        { href: '/admin', label: 'Vendeurs', icon: 'bi-people' },
-        { href: '/admin/referents', label: 'Référents', icon: 'bi-person-badge' },
-        { href: '/backoffice/messages', label: 'Messagerie', icon: 'bi-chat-dots', count: notificationCount, badgeColor: 'primary' },
-        { href: '/admin/links', label: 'Liens', icon: 'bi-link-45deg' },
-        { href: '/backoffice/process', label: 'Process', icon: 'bi-diagram-3' },
-        { href: '/formation', label: 'Formation', icon: 'bi-mortarboard' },
-        { href: '/calendar', label: 'Agenda', icon: 'bi-calendar-week' },
-        { href: '/performances', label: 'Performances', icon: 'bi-graph-up-arrow', count: performancesActivityCount, badgeColor: 'success' },
-      ];
-    } else if (userRole === 'REFERENT') {
+    if (userRole === 'REFERENT') {
       return [
         { href: '/referent', label: 'Mes Vendeurs', icon: 'bi-people' },
         { href: '/referent/demandes', label: 'Demandes', icon: 'bi-clipboard-check' },

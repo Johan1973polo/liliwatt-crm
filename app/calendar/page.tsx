@@ -19,29 +19,9 @@ export default async function CalendarPage() {
   let canEdit = true; // Par défaut, l'utilisateur peut éditer
 
   if (session.user.role === 'ADMIN') {
-    // Admin voit tous les utilisateurs (sauf back-office)
+    // Admin voit tous les utilisateurs
     viewableUsers = await prisma.user.findMany({
-      where: {
-        role: {
-          not:,
-        },
-      },
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        role: true,
-        avatar: true,
-        courtierNumber: true,
-      },
-      orderBy: [
-        { role: 'asc' },
-        { email: 'asc' },
-      ],
-    });
-  ,
-      },
+      where: {},
       select: {
         id: true,
         email: true,
