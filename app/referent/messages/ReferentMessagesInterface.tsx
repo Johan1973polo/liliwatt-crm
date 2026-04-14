@@ -27,23 +27,19 @@ export default function ReferentMessagesInterface({
   currentUserRole,
   admins,
   referents,
-  backoffice,
   vendeurs,
   unreadCountsByVendeur = [],
   unreadCountsByAdmin = [],
   unreadCountsByReferent = [],
-  unreadCountsByBackoffice = [],
 }: {
   currentUserId: string;
   currentUserRole?: string;
   admins: User[];
   referents: User[];
-  backoffice: User[];
   vendeurs: User[];
   unreadCountsByVendeur?: { userId: string; count: number; }[];
   unreadCountsByAdmin?: { userId: string; count: number; }[];
   unreadCountsByReferent?: { userId: string; count: number; }[];
-  unreadCountsByBackoffice?: { userId: string; count: number; }[];
 }) {
   const router = useRouter();
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -53,7 +49,7 @@ export default function ReferentMessagesInterface({
 
   // Initialiser unreadCounts avec les valeurs du serveur
   const initialUnreadCounts: Record<string, number> = {};
-  [...unreadCountsByVendeur, ...unreadCountsByAdmin, ...unreadCountsByReferent, ...unreadCountsByBackoffice].forEach(item => {
+  [...unreadCountsByVendeur, ...unreadCountsByAdmin, ...unreadCountsByReferent].forEach(item => {
     initialUnreadCounts[item.userId] = item.count;
   });
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>(initialUnreadCounts);
@@ -158,12 +154,10 @@ export default function ReferentMessagesInterface({
   const selectedUser =
     admins.find(a => a.id === selectedUserId) ||
     referents.find(r => r.id === selectedUserId) ||
-    backoffice.find(b => b.id === selectedUserId) ||
     vendeurs.find(v => v.id === selectedUserId);
 
   const selectedUserRole = admins.find(a => a.id === selectedUserId) ? 'Admin' :
-    referents.find(r => r.id === selectedUserId) ? 'Référent' :
-    backoffice.find(b => b.id === selectedUserId) ? 'Back-Office' : 'Vendeur';
+    referents.find(r => r.id === selectedUserId) ? 'Référent' : 'Vendeur';
 
   return (
     <div className="row">
@@ -259,53 +253,6 @@ export default function ReferentMessagesInterface({
                       {unreadCounts[referent.id] > 0 && (
                         <span className="badge bg-danger rounded-pill">
                           {unreadCounts[referent.id]}
-                        </span>
-                      )}
-                    </div>
-                  </button>
-                ))}
-              </>
-            )}
-
-            {/* Back-Office */}
-            {backoffice.length > 0 && (
-              <>
-                <div className="list-group-item bg-light">
-                  <small className="text-muted fw-bold">BACK-OFFICE</small>
-                </div>
-                {backoffice.map((bo) => (
-                  <button
-                    key={bo.id}
-                    onClick={() => setSelectedUserId(bo.id)}
-                    className={`list-group-item list-group-item-action ${selectedUserId === bo.id ? 'active' : ''}`}
-                  >
-                    <div className="d-flex align-items-center gap-2">
-                      {bo.avatar ? (
-                        <Image
-                          src={bo.avatar}
-                          alt={bo.email}
-                          width={40}
-                          height={40}
-                          className="rounded-circle"
-                          style={{ objectFit: 'cover' }}
-                        />
-                      ) : (
-                        <div
-                          className="rounded-circle bg-info d-flex align-items-center justify-content-center"
-                          style={{ width: '40px', height: '40px', minWidth: '40px' }}
-                        >
-                          <i className="bi bi-briefcase text-white"></i>
-                        </div>
-                      )}
-                      <div className="flex-grow-1">
-                        <div className="fw-semibold">{bo.email}</div>
-                        <small className={selectedUserId === bo.id ? 'text-white-50' : 'text-muted'}>
-                          Back-Office
-                        </small>
-                      </div>
-                      {unreadCounts[bo.id] > 0 && (
-                        <span className="badge bg-danger rounded-pill">
-                          {unreadCounts[bo.id]}
                         </span>
                       )}
                     </div>

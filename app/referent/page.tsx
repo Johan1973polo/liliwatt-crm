@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Navbar from '@/components/Navbar';
 import VendeursTableau from './VendeursTableau';
-import CredentialsBlock from '../vendeur/CredentialsBlock';
+import VendeurIdentifiants from '../vendeur/VendeurIdentifiants';
 import LinksBlock from '../vendeur/LinksBlock';
 import QuickAccessCards from '../vendeur/QuickAccessCards';
 import AutoRefresh from '@/components/AutoRefresh';
@@ -19,12 +19,6 @@ export default async function ReferentPage() {
   }
 
   const userId = session.user.id;
-
-  // Récupérer les identifiants du référent
-  const credentials = await prisma.credential.findMany({
-    where: { userId },
-    orderBy: { createdAt: 'desc' },
-  });
 
   // Récupérer les liens personnels du référent
   const personalLinks = await prisma.link.findMany({
@@ -91,7 +85,7 @@ export default async function ReferentPage() {
             <LinksBlock links={personalLinks} />
           </div>
           <div className="col-md-6">
-            <CredentialsBlock credentials={credentials} />
+            <VendeurIdentifiants />
           </div>
         </div>
 

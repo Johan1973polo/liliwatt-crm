@@ -31,13 +31,6 @@ export default async function ReferentMessagesPage() {
     orderBy: { createdAt: 'desc' },
   });
 
-  // Récupérer tous les utilisateurs Back-Office
-  const backoffice = await prisma.user.findMany({
-    where: {},
-    select: { id: true, email: true, phone: true, avatar: true },
-    orderBy: { createdAt: 'desc' },
-  });
-
   // Récupérer UNIQUEMENT les vendeurs du référent connecté (cloisonnement)
   const vendeurs = await prisma.user.findMany({
     where: {
@@ -90,20 +83,6 @@ export default async function ReferentMessagesPage() {
     })
   );
 
-  // Compter les messages non lus par back-office
-  const unreadCountsByBackoffice = await Promise.all(
-    backoffice.map(async (bo) => {
-      const count = await prisma.message.count({
-        where: {
-          toUserId: userId,
-          fromUserId: bo.id,
-          readAt: null,
-        },
-      });
-      return { userId: bo.id, count };
-    })
-  );
-
   // Compter UNIQUEMENT les notifications de messages non lues
   const totalUnreadNotifications = await prisma.notification.count({
     where: {
@@ -151,12 +130,10 @@ export default async function ReferentMessagesPage() {
           currentUserRole="REFERENT"
           admins={admins}
           referents={referents}
-          backoffice={backoffice}
           vendeurs={vendeurs}
           unreadCountsByVendeur={unreadCountsByVendeur}
           unreadCountsByAdmin={unreadCountsByAdmin}
           unreadCountsByReferent={unreadCountsByReferent}
-          unreadCountsByBackoffice={unreadCountsByBackoffice}
         />
       </div>
     </>
