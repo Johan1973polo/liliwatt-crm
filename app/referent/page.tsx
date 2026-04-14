@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import VendeursTableau from './VendeursTableau';
 import CredentialsBlock from '../vendeur/CredentialsBlock';
 import LinksBlock from '../vendeur/LinksBlock';
+import QuickAccessCards from '../vendeur/QuickAccessCards';
 import AutoRefresh from '@/components/AutoRefresh';
 
 export const revalidate = 0;
@@ -81,6 +82,9 @@ export default async function ReferentPage() {
       />
 
       <div className="container-fluid py-4">
+        {/* Accès rapides */}
+        <QuickAccessCards />
+
         {/* Section Liens et Identifiants */}
         <div className="row mb-4">
           <div className="col-md-6">
