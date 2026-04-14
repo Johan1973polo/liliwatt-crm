@@ -181,6 +181,29 @@ async function main() {
   }
   console.log(`✅ ${trainingModulesData.length} modules de formation créés`);
 
+  // Créer les quiz pour chaque module
+  await prisma.quizResult.deleteMany();
+  await prisma.quiz.deleteMany();
+  const quizzesData = JSON.parse(
+    require('fs').readFileSync(require('path').join(__dirname, 'quizzes.json'), 'utf-8')
+  );
+  const allModules = await prisma.trainingModule.findMany({ orderBy: { order: 'asc' } });
+  let quizCount = 0;
+  for (const mod of allModules) {
+    const questions = quizzesData[String(mod.order)];
+    if (questions) {
+      await prisma.quiz.create({
+        data: {
+          moduleId: mod.id,
+          questions,
+          passMark: 4,
+        },
+      });
+      quizCount++;
+    }
+  }
+  console.log(`✅ ${quizCount} quiz créés (${Object.values(quizzesData).flat().length} questions)`);
+
   console.log('');
   console.log('✨ Seeding terminé avec succès !');
   console.log('');

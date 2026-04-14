@@ -1,0 +1,662 @@
+{
+  "1": [
+    {
+      "question": "En quelle année le marché de l'énergie en France a-t-il été totalement ouvert à la concurrence ?",
+      "type": "QCM",
+      "options": [
+        "1999",
+        "2004",
+        "2007",
+        "2010"
+      ],
+      "correct": 2,
+      "explanation": "Le marché de l'énergie est totalement ouvert à la concurrence depuis le 1er juillet 2007."
+    },
+    {
+      "question": "ENEDIS ne facture pas l'énergie aux clients, il gère uniquement le réseau de distribution.",
+      "type": "Vrai ou Faux",
+      "options": [
+        "Vrai",
+        "Faux"
+      ],
+      "correct": 0,
+      "explanation": "ENEDIS est le gestionnaire du réseau de distribution. Ce sont les fournisseurs (EDF, Engie, etc.) qui facturent l'énergie."
+    },
+    {
+      "question": "Un prospect vous dit : \"Je suis très bien chez EDF, je ne veux pas changer.\" Quelle est la meilleure réponse ?",
+      "type": "Mise en situation",
+      "options": [
+        "Vous avez tort, EDF est trop cher.",
+        "EDF est un fournisseur parmi d'autres. Le réseau reste ENEDIS quel que soit le fournisseur. Seuls le prix et le logo changent.",
+        "D'accord, je comprends. Au revoir.",
+        "Je vous envoie quand même un comparatif par mail."
+      ],
+      "correct": 1,
+      "explanation": "Il faut rassurer en expliquant que le réseau ne change pas (ENEDIS), que seul le prix varie, et que le changement est gratuit et réversible."
+    },
+    {
+      "question": "Quelle part de la facture d'énergie est négociable par le courtier ?",
+      "type": "QCM",
+      "options": [
+        "Le TURPE (~35%)",
+        "Les taxes (~25%)",
+        "La fourniture (~35%)",
+        "La totalité de la facture"
+      ],
+      "correct": 2,
+      "explanation": "Seule la part fourniture (environ 35% de la facture) est négociable. Le TURPE et les taxes sont fixés par l'État/CRE."
+    },
+    {
+      "question": "Le segment C4 correspond à quelle puissance souscrite ?",
+      "type": "QCM",
+      "options": [
+        "Inférieure à 36 kVA",
+        "De 36 à 250 kVA",
+        "Supérieure à 250 kVA",
+        "Supérieure à 10 MVA"
+      ],
+      "correct": 1,
+      "explanation": "C4 (ancien tarif Jaune) correspond à une puissance souscrite entre 36 et 250 kVA."
+    }
+  ],
+  "2": [
+    {
+      "question": "Combien de chiffres comporte un Point de Livraison (PDL) ?",
+      "type": "QCM",
+      "options": [
+        "10 chiffres",
+        "12 chiffres",
+        "14 chiffres",
+        "16 chiffres"
+      ],
+      "correct": 2,
+      "explanation": "Le PDL est un numéro unique de 14 chiffres identifiant le compteur électrique du client."
+    },
+    {
+      "question": "Pour un client C5 (< 36 kVA), quelles tarifications sont possibles ?",
+      "type": "QCM",
+      "options": [
+        "Uniquement Base",
+        "Base ou HP/HC",
+        "HP Hiver / HC Hiver / HP Été / HC Été",
+        "Tarif unique national"
+      ],
+      "correct": 1,
+      "explanation": "Le segment C5 propose deux tarifications : Base (tarif unique 24h/24) ou HP/HC (heures pleines / heures creuses)."
+    },
+    {
+      "question": "Un contrat à \"prix fixe\" signifie que la totalité de la facture est fixe pendant toute la durée.",
+      "type": "Vrai ou Faux",
+      "options": [
+        "Vrai",
+        "Faux"
+      ],
+      "correct": 1,
+      "explanation": "FAUX — Le \"prix fixe\" concerne généralement uniquement le kWh fourniture, pas l'acheminement, les taxes ni la capacité."
+    },
+    {
+      "question": "Un prospect C5 vous dit : \"Je viens de resigner.\" Que faites-vous ?",
+      "type": "Mise en situation",
+      "options": [
+        "Vous raccrochez poliment.",
+        "Vous demandez la puissance en kVA. Si < 36 kVA, il peut renégocier à tout moment.",
+        "Vous insistez pour avoir la facture quand même.",
+        "Vous lui dites que c'est trop tard."
+      ],
+      "correct": 1,
+      "explanation": "En C5 (< 36 kVA), le client peut renégocier à tout moment sans pénalité. C'est un argument clé."
+    },
+    {
+      "question": "Quel est le piège contractuel le plus fréquent chez les fournisseurs ?",
+      "type": "QCM",
+      "options": [
+        "Les frais d'installation",
+        "La reconduction tacite",
+        "Le changement de compteur",
+        "La coupure d'énergie"
+      ],
+      "correct": 1,
+      "explanation": "La reconduction tacite est le piège le plus fréquent : contrat 36 mois → reconduction automatique 12 mois si le client ne résilie pas dans la fenêtre (1 à 3 mois)."
+    }
+  ],
+  "3": [
+    {
+      "question": "Quel record de prix mensuel a été atteint sur le marché EPEX SPOT ?",
+      "type": "QCM",
+      "options": [
+        "275 €/MWh en décembre 2021",
+        "492 €/MWh en août 2022",
+        "204 €/MWh en janvier 2023",
+        "118 €/MWh en 2024"
+      ],
+      "correct": 1,
+      "explanation": "Le record historique a été atteint en août 2022 à 492 €/MWh, au cœur de la crise de l'énergie."
+    },
+    {
+      "question": "Dans le merit order, quelle énergie fixe le plus souvent le prix final de l'électricité ?",
+      "type": "QCM",
+      "options": [
+        "Le nucléaire",
+        "Le solaire",
+        "Le gaz naturel",
+        "L'éolien"
+      ],
+      "correct": 2,
+      "explanation": "Le gaz naturel (70 €/MWh) est souvent la dernière centrale appelée en période de pointe, fixant ainsi le prix pour l'ensemble du marché."
+    },
+    {
+      "question": "Des prix négatifs de l'électricité sont impossibles sur le marché.",
+      "type": "Vrai ou Faux",
+      "options": [
+        "Vrai",
+        "Faux"
+      ],
+      "correct": 1,
+      "explanation": "FAUX — Des prix négatifs existent. Le 13 avril 2020, un prix de -75,8 €/MWh a été observé quand l'offre renouvelable dépassait largement la demande."
+    },
+    {
+      "question": "Combien de pays européens sont couverts par la bourse EPEX SPOT ?",
+      "type": "QCM",
+      "options": [
+        "5 pays",
+        "8 pays",
+        "13 pays",
+        "27 pays"
+      ],
+      "correct": 2,
+      "explanation": "EPEX SPOT couvre 13 pays européens et environ un tiers de la consommation annuelle d'électricité du continent y est échangée."
+    },
+    {
+      "question": "Que signifie \"Baseload\" sur le marché à terme ?",
+      "type": "QCM",
+      "options": [
+        "Heures de pointe 8h-20h",
+        "Fourniture continue 24h/24, 7j/7",
+        "Production nucléaire uniquement",
+        "Prix minimum garanti"
+      ],
+      "correct": 1,
+      "explanation": "Baseload = fourniture continue 24h/24, 7j/7. Adapté aux centrales à fort facteur de charge (nucléaire, hydraulique)."
+    }
+  ],
+  "4": [
+    {
+      "question": "Quel pourcentage des décisions d'achat sont émotionnelles, même en B2B ?",
+      "type": "QCM",
+      "options": [
+        "25%",
+        "50%",
+        "75%",
+        "90%"
+      ],
+      "correct": 2,
+      "explanation": "Les études confirment que près de 75% des décisions d'achat sont émotionnelles, même en contexte B2B."
+    },
+    {
+      "question": "S'excuser une fois d'appeler (\"Pardonnez-moi du dérangement\") est acceptable si c'est fait avec assurance.",
+      "type": "Vrai ou Faux",
+      "options": [
+        "Vrai",
+        "Faux"
+      ],
+      "correct": 0,
+      "explanation": "VRAI — Cette formule est acceptable UNE FOIS, prononcée avec assurance. Ensuite, il faut immédiatement reprendre la posture d'expert."
+    },
+    {
+      "question": "Un prospect refuse immédiatement votre appel. Quelle est votre analyse ?",
+      "type": "Mise en situation",
+      "options": [
+        "Il n'est pas intéressé, passez au suivant.",
+        "Son filtre automatique s'est activé (Inconnu → Commercial → Refus). Ce n'est pas personnel.",
+        "Il a raison, l'énergie n'est pas un sujet important.",
+        "Rappelez immédiatement avec un autre numéro."
+      ],
+      "correct": 1,
+      "explanation": "Le rejet n'est pas personnel, c'est un mécanisme de défense (filtre automatique). 70% de non-réponses et 20% de refus sont normaux."
+    },
+    {
+      "question": "Quelle est la première étape de la Méthode LILIWATT face à un prospect méfiant ?",
+      "type": "QCM",
+      "options": [
+        "Proposer une offre immédiatement",
+        "Valider sa méfiance (\"Je comprends, vous avez été très sollicité\")",
+        "Expliquer le comparatif",
+        "Demander la facture"
+      ],
+      "correct": 1,
+      "explanation": "Étape 1 : Valider la méfiance. Étape 2 : Rassurer techniquement. Étape 3 : Recentrer sur l'étude."
+    },
+    {
+      "question": "La Règle d'Or dit qu'un dirigeant accepte un RDV si ces 3 conditions sont réunies :",
+      "type": "QCM",
+      "options": [
+        "Prix bas + Rapidité + Engagement",
+        "Risque faible + Temps limité + Bénéfice crédible",
+        "Insistance + Relance + Pression",
+        "Expertise + Références + Garantie"
+      ],
+      "correct": 1,
+      "explanation": "Un dirigeant accepte si : le risque est faible, le temps investi est limité, et le bénéfice potentiel est crédible."
+    }
+  ],
+  "5": [
+    {
+      "question": "Combien d'étapes comporte un appel LILIWATT structuré ?",
+      "type": "QCM",
+      "options": [
+        "4 étapes",
+        "5 étapes",
+        "6 étapes",
+        "8 étapes"
+      ],
+      "correct": 2,
+      "explanation": "6 étapes : Accroche → Qualification → Éveil du besoin → Récupération facture → Préparation closing → Prise de RDV ferme."
+    },
+    {
+      "question": "Envoyer l'offre par mail sans rendez-vous de présentation est une méthode efficace.",
+      "type": "Vrai ou Faux",
+      "options": [
+        "Vrai",
+        "Faux"
+      ],
+      "correct": 1,
+      "explanation": "FAUX — L'expérience montre que sans échange, l'offre reste dans la boîte mail. Il faut toujours un RDV de présentation."
+    },
+    {
+      "question": "Un prospect dit : \"Je n'ai pas le temps.\" Quelle est la meilleure réponse ?",
+      "type": "Mise en situation",
+      "options": [
+        "Je comprends, au revoir.",
+        "Je serai bref, juste 2 minutes...",
+        "Dites-moi vos disponibilités pour que je vous rappelle. Plutôt le matin ou l'après-midi ?",
+        "L'étude est gratuite, ça vaut le coup."
+      ],
+      "correct": 2,
+      "explanation": "On ne force pas, on propose un rappel en donnant le choix (matin/après-midi). Le prospect garde le contrôle."
+    },
+    {
+      "question": "Pourquoi l'étude LILIWATT est-elle gratuite pour le client ?",
+      "type": "QCM",
+      "options": [
+        "C'est une promotion temporaire",
+        "Le courtier est rémunéré par le fournisseur choisi en tant qu'apporteur d'affaires",
+        "LILIWATT est subventionné par l'État",
+        "Le coût est inclus dans la facture du nouveau fournisseur"
+      ],
+      "correct": 1,
+      "explanation": "Si le client retient une offre, LILIWATT est rémunéré par le fournisseur d'énergie choisi en tant qu'apporteur d'affaires."
+    },
+    {
+      "question": "La technique de \"fausse continuité\" consiste à :",
+      "type": "QCM",
+      "options": [
+        "Mentir sur l'identité de l'appelant",
+        "Exploiter les données Base Premium pour adopter un ton de suivi plutôt que de prospection froide",
+        "Prétendre que le client a déjà accepté",
+        "Appeler plusieurs fois le même jour"
+      ],
+      "correct": 1,
+      "explanation": "Avec les données Base Premium (nom, échéance, segment...), on adopte un ton de suivi professionnel qui transforme un appel froid en appel chaud."
+    }
+  ],
+  "6": [
+    {
+      "question": "Combien de temps un comparatif est-il valable ?",
+      "type": "QCM",
+      "options": [
+        "1 semaine",
+        "48 heures",
+        "24 heures maximum",
+        "Illimité"
+      ],
+      "correct": 2,
+      "explanation": "Les tarifs sont indexés sur le marché EPEX Spot et varient quotidiennement. Un comparatif est valable 24 heures maximum."
+    },
+    {
+      "question": "Avant de demander la signature, combien de fois le prospect doit-il avoir dit \"oui\" ?",
+      "type": "QCM",
+      "options": [
+        "1 fois",
+        "2 fois",
+        "3 fois (règle des 3 validations)",
+        "5 fois"
+      ],
+      "correct": 2,
+      "explanation": "Règle des 3 validations : 1) Optimisation possible ? 2) Économie significative ? 3) Aucune intervention technique ? → La signature devient logique."
+    },
+    {
+      "question": "Un prospect dit : \"Je veux réfléchir.\" Que faites-vous ?",
+      "type": "Mise en situation",
+      "options": [
+        "D'accord, rappelez-moi quand vous serez prêt.",
+        "Bien sûr. Est-ce un point précis qui vous fait hésiter ? Le prix ? La durée ? Le changement ?",
+        "Vous n'avez pas le temps de réfléchir, les prix changent demain.",
+        "Je vous envoie le contrat par mail."
+      ],
+      "correct": 1,
+      "explanation": "Toujours isoler l'objection. Ne jamais laisser une objection floue. Identifier le frein réel."
+    },
+    {
+      "question": "Envoyer le contrat par mail sans appel de présentation est suffisant pour closer.",
+      "type": "Vrai ou Faux",
+      "options": [
+        "Vrai",
+        "Faux"
+      ],
+      "correct": 1,
+      "explanation": "FAUX — L'expérience montre que sans échange, le contrat reste dans la boîte mail. Il faut un RDV de présentation."
+    },
+    {
+      "question": "Quelle est la durée idéale d'un appel de closing R2 ?",
+      "type": "QCM",
+      "options": [
+        "5 minutes",
+        "10 à 15 minutes",
+        "30 minutes",
+        "45 minutes"
+      ],
+      "correct": 1,
+      "explanation": "Structure idéale : 2 min contexte + 3 min analyse + 2 min projection + 3 min validation + 3 min négociation + 2 min conclusion = 10-15 min max."
+    }
+  ],
+  "7": [
+    {
+      "question": "Combien de ventes mensuelles représente le standard \"Mission 8\" chez LILIWATT ?",
+      "type": "QCM",
+      "options": [
+        "4 ventes",
+        "6 ventes",
+        "8 ventes",
+        "10 ventes"
+      ],
+      "correct": 2,
+      "explanation": "Mission 8 = 8 ventes mensuelles. Ce n'est ni un plafond ni un exploit, juste un standard de performance atteignable."
+    },
+    {
+      "question": "Selon l'Article 7 du Manuel interne, quel est le véritable ennemi de la performance ?",
+      "type": "QCM",
+      "options": [
+        "La concurrence",
+        "Le relâchement",
+        "Le client difficile",
+        "Le manque de formation"
+      ],
+      "correct": 1,
+      "explanation": "Article 7 : L'ennemi n'est pas la difficulté. L'ennemi est le relâchement. La difficulté forge les meilleurs, le confort les affaiblit."
+    },
+    {
+      "question": "Dans le CRM, les 4 statuts possibles d'un module de formation sont : Verrouillé, Déverrouillé, En cours, Complété.",
+      "type": "Vrai ou Faux",
+      "options": [
+        "Vrai",
+        "Faux"
+      ],
+      "correct": 0,
+      "explanation": "VRAI — Les 4 statuts sont : Verrouillé (gris) → Déverrouillé (bleu) → En cours (orange) → Complété (vert)."
+    },
+    {
+      "question": "Quels sont les 2 boutons d'actions rapides dans \"Mon Espace\" ?",
+      "type": "QCM",
+      "options": [
+        "Envoyer un mail + Appeler",
+        "J'ai récupéré une facture + Déclarer ma vente",
+        "Créer un dossier + Envoyer RGPD",
+        "Demander une base + Demander une note"
+      ],
+      "correct": 1,
+      "explanation": "Les 2 boutons d'actions rapides sont : \"J'ai récupéré une facture\" et \"Déclarer ma vente\", qui envoient des notifications à l'équipe."
+    },
+    {
+      "question": "Un opérateur stagne à 3 ventes/mois depuis 2 mois. Selon la culture LILIWATT, quelle est l'approche ?",
+      "type": "Mise en situation",
+      "options": [
+        "On le laisse tranquille, il finira par progresser.",
+        "On l'accompagne dans sa montée en compétences (Article 6).",
+        "On le sanctionne immédiatement.",
+        "On ne fait rien, c'est son problème."
+      ],
+      "correct": 1,
+      "explanation": "Article 6 : Celui qui progresse est valorisé, celui qui stagne est accompagné dans sa montée en compétences. La stagnation appelle un accompagnement."
+    }
+  ],
+  "8": [
+    {
+      "question": "Quel est le standard quotidien d'appels pour un opérateur LILIWATT ?",
+      "type": "QCM",
+      "options": [
+        "50 à 80 appels",
+        "80 à 100 appels",
+        "120 à 150 appels",
+        "200 appels minimum"
+      ],
+      "correct": 2,
+      "explanation": "Standard quotidien : 120 à 150 appels par jour + 3 à 6 demandes de factures effectuées."
+    },
+    {
+      "question": "Le Pilier 2 (Relances) a une durée recommandée de :",
+      "type": "QCM",
+      "options": [
+        "15 à 30 minutes",
+        "45 minutes à 1 heure",
+        "2 à 3 heures",
+        "Toute la matinée"
+      ],
+      "correct": 1,
+      "explanation": "Pilier 2 — Relances : durée recommandée de 45 min à 1h. Objectif : récupérer ce qui est \"en attente\"."
+    },
+    {
+      "question": "La régularité prévaut sur l'intensité ponctuelle.",
+      "type": "Vrai ou Faux",
+      "options": [
+        "Vrai",
+        "Faux"
+      ],
+      "correct": 0,
+      "explanation": "VRAI — La régularité quotidienne (120 appels chaque jour) est plus performante qu'un pic de 200 appels un jour puis rien le lendemain."
+    },
+    {
+      "question": "Selon la règle des 100 appels, combien de factures obtient-on en moyenne ?",
+      "type": "QCM",
+      "options": [
+        "0 facture",
+        "1 facture",
+        "2 factures",
+        "5 factures"
+      ],
+      "correct": 2,
+      "explanation": "100 appels ≈ 20 conversations → 5 prospects intéressés → 2 factures → 1 opportunité. Les top performers acceptent ces ratios."
+    },
+    {
+      "question": "Un opérateur fait peu d'appels le matin. Quelle est la première cause probable ?",
+      "type": "Mise en situation",
+      "options": [
+        "Il n'a pas de base de prospects.",
+        "Il mélange relances et prospection ou se laisse distraire (Pilier 1 non respecté).",
+        "Il est trop compétent et n'a pas besoin de volume.",
+        "La base de prospects est de mauvaise qualité."
+      ],
+      "correct": 1,
+      "explanation": "Erreur classique : mélanger relances et prospection pendant le Pilier 1. Le Pilier 1 (9h-11h30) doit être 100% prospection pure, sans distraction."
+    }
+  ],
+  "9": [
+    {
+      "question": "À partir de quel niveau un opérateur LILIWATT peut-il viser 50 000 € de commission annuelle minimum ?",
+      "type": "QCM",
+      "options": [
+        "Niveau 1 — Opérateur de marché",
+        "Niveau 2 — Expert en stratégie énergétique",
+        "Niveau 3 — Référent technique",
+        "Niveau 4 — Responsable des opérations"
+      ],
+      "correct": 1,
+      "explanation": "Niveau 2 (Expert en stratégie énergétique) : commission annuelle minimum 50k€, taux de closing 30 à 50%."
+    },
+    {
+      "question": "Quelle fourchette de commission le Référent Technique perçoit-il sur les ventes de son réseau ?",
+      "type": "QCM",
+      "options": [
+        "5 à 10%",
+        "10 à 20%",
+        "25 à 50%",
+        "50 à 75%"
+      ],
+      "correct": 2,
+      "explanation": "Le Référent Technique perçoit 25% à 50% de la commission commerciale générée par son réseau d'opérateurs."
+    },
+    {
+      "question": "En moyenne, 20 à 30% d'un réseau d'opérateurs est réellement productif.",
+      "type": "Vrai ou Faux",
+      "options": [
+        "Vrai",
+        "Faux"
+      ],
+      "correct": 0,
+      "explanation": "VRAI — C'est normal et prévu dans le modèle économique. Sur 50 opérateurs, environ 15 sont réellement actifs."
+    },
+    {
+      "question": "Quel est le taux de closing attendu pour un Opérateur de marché (Niveau 1) ?",
+      "type": "QCM",
+      "options": [
+        "5 à 10%",
+        "20 à 30%",
+        "50 à 60%",
+        "70 à 80%"
+      ],
+      "correct": 1,
+      "explanation": "Niveau 1 : taux de closing de 20 à 30%, commission mensuelle de 3k à 8k€."
+    },
+    {
+      "question": "Un opérateur performant veut passer au Niveau 2. Que lui conseillez-vous ?",
+      "type": "Mise en situation",
+      "options": [
+        "Attendre que le référent décide.",
+        "Se fixer des objectifs précis, constater sa montée en compétences et aligner son attitude avec la culture LILIWATT.",
+        "Demander une augmentation de commission.",
+        "Simplement augmenter le volume d'appels."
+      ],
+      "correct": 1,
+      "explanation": "Le passage de niveau repose sur : résultats + maîtrise + impact + attitude alignée avec la culture LILIWATT."
+    }
+  ],
+  "10": [
+    {
+      "question": "Quel critère est plus important que l'expérience lors du recrutement d'un opérateur ?",
+      "type": "QCM",
+      "options": [
+        "Le CV",
+        "L'ambition et la résilience",
+        "Le diplôme",
+        "L'expérience en énergie"
+      ],
+      "correct": 1,
+      "explanation": "Le profil idéal est autonome, résilient, discipliné et orienté résultat. L'ambition et la capacité à gérer le rejet comptent plus que l'expérience."
+    },
+    {
+      "question": "La méthode de formation du référent suit l'ordre :",
+      "type": "QCM",
+      "options": [
+        "Corriger → Voir → Faire",
+        "Faire → Corriger → Voir",
+        "Voir → Faire → Corriger",
+        "Expliquer → Tester → Valider"
+      ],
+      "correct": 2,
+      "explanation": "Voir (le référent passe des appels) → Faire (l'opérateur appelle, le référent écoute) → Corriger (débriefing immédiat)."
+    },
+    {
+      "question": "Un opérateur ne doit jamais passer son premier appel sans formation préalable.",
+      "type": "Vrai ou Faux",
+      "options": [
+        "Vrai",
+        "Faux"
+      ],
+      "correct": 0,
+      "explanation": "VRAI — Règle absolue. Minimum : Module 1 + Module 5 + simulation avant le premier appel réel. Un opérateur non formé brûle les prospects."
+    },
+    {
+      "question": "La règle des 3 profils dans une équipe est :",
+      "type": "QCM",
+      "options": [
+        "30% top / 40% moyens / 30% faibles",
+        "20% top / 60% potentiels / 20% inactifs",
+        "10% top / 80% moyens / 10% inactifs",
+        "50% actifs / 50% inactifs"
+      ],
+      "correct": 1,
+      "explanation": "20% top performers (autonomes) / 60% potentiels (à accompagner, font la différence) / 20% inactifs (une chance puis trancher)."
+    },
+    {
+      "question": "Un opérateur fait peu d'appels en semaine 2. Que faites-vous en priorité ?",
+      "type": "Mise en situation",
+      "options": [
+        "Attendre la semaine 3 pour voir.",
+        "Appel immédiat pour identifier le problème (moral, technique, personnel). Agir dans les 24h.",
+        "Envoyer un message d'avertissement.",
+        "Le retirer de l'équipe."
+      ],
+      "correct": 1,
+      "explanation": "Rituel de décrochage : si un opérateur chute, appel immédiat. Identifier le problème et agir dans les 24h."
+    }
+  ],
+  "11": [
+    {
+      "question": "Le RGPD doit être signé par le client avant de lancer la mise en concurrence.",
+      "type": "QCM",
+      "options": [
+        "Oui, c'est obligatoire avant toute MEC",
+        "Non, on peut le faire après",
+        "C'est optionnel",
+        "Uniquement pour les C4/C3"
+      ],
+      "correct": 0,
+      "explanation": "Sans consentement RGPD signé, LILIWATT ne peut légalement transmettre les données aux fournisseurs ni effectuer de mise en concurrence."
+    },
+    {
+      "question": "Combien de chiffres comporte un PDL valide ?",
+      "type": "QCM",
+      "options": [
+        "10 chiffres",
+        "12 chiffres",
+        "14 chiffres",
+        "16 chiffres"
+      ],
+      "correct": 2,
+      "explanation": "Le PDL (Point de Livraison) comporte exactement 14 chiffres. Sans PDL valide, aucune MEC n'est possible."
+    },
+    {
+      "question": "Un comparatif est valable 48 heures.",
+      "type": "Vrai ou Faux",
+      "options": [
+        "Vrai",
+        "Faux"
+      ],
+      "correct": 1,
+      "explanation": "FAUX — Un comparatif est valable 24 heures maximum, les tarifs étant indexés sur le marché EPEX Spot et variant quotidiennement."
+    },
+    {
+      "question": "L'extraction affiche un PDL de 12 chiffres. Que faites-vous ?",
+      "type": "Mise en situation",
+      "options": [
+        "Vous lancez la MEC quand même.",
+        "Vous vérifiez sur la facture originale : un PDL doit avoir 14 chiffres. L'extraction est probablement incomplète.",
+        "Vous contactez ENEDIS pour vérifier.",
+        "Vous abandonnez le dossier."
+      ],
+      "correct": 1,
+      "explanation": "Un PDL doit avoir exactement 14 chiffres. Si l'extraction en affiche 12, vérifiez sur la facture PDF originale et corrigez manuellement."
+    },
+    {
+      "question": "Dans quel ordre faut-il présenter les économies au client pour maximiser l'impact ?",
+      "type": "QCM",
+      "options": [
+        "Mensuel → Annuel → Sur 3 ans",
+        "Sur 3 ans → Annuel → Mensuel",
+        "Annuel → Sur 3 ans → Mensuel",
+        "Uniquement le pourcentage de réduction"
+      ],
+      "correct": 2,
+      "explanation": "Annuel (chiffre principal) → Sur 3 ans (projection long terme, impacte le cerveau) → Mensuel (tangible au quotidien). Les 3 pour maximiser l'impact."
+    }
+  ]
+}

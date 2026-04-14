@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Navbar from '@/components/Navbar';
 import ModuleContent from './ModuleContent';
+import Link from 'next/link';
 
 export const revalidate = 0;
 
@@ -93,6 +94,24 @@ export default async function ModuleDetailPage({ params }: { params: { id: strin
           progress={progress}
           isAdmin={['ADMIN', 'REFERENT'].includes(session.user.role)}
         />
+
+        {/* Bouton Quiz */}
+        <div className="text-center mt-4 mb-5" style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <Link
+            href={`/formation/${moduleId}/quiz`}
+            className="btn text-white py-3 px-5 w-100"
+            style={{
+              background: 'linear-gradient(135deg, #7c3aed, #d946ef)',
+              border: 'none',
+              borderRadius: '14px',
+              fontSize: '16px',
+              fontWeight: 700,
+            }}
+          >
+            <i className="bi bi-mortarboard me-2"></i>
+            Passer le quiz de validation
+          </Link>
+        </div>
       </div>
     </>
   );

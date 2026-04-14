@@ -44,6 +44,7 @@ model User {
   trainingProgress       TrainingProgress[] @relation("SellerProgress")
   unlockedTrainings      TrainingProgress[] @relation("UnlockedBy")
   declarations           Declaration[]
+  quizResults            QuizResult[]
 
   @@index([email])
   @@index([referentId])
@@ -268,6 +269,8 @@ model TrainingModule {
 
   // Relations
   progress          TrainingProgress[]
+  quiz              Quiz?
+  quizResults       QuizResult[]
 
   @@index([order])
 }
@@ -295,6 +298,35 @@ model TrainingProgress {
   @@index([sellerId])
   @@index([moduleId])
   @@index([status])
+}
+
+model Quiz {
+  id          String         @id @default(cuid())
+  moduleId    String         @unique
+  questions   Json           // Array of {question, type, options, correct, explanation}
+  passMark    Int            @default(4)
+  createdAt   DateTime       @default(now())
+
+  // Relations
+  module      TrainingModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+}
+
+model QuizResult {
+  id          String         @id @default(cuid())
+  userId      String
+  moduleId    String
+  score       Int
+  total       Int
+  passed      Boolean
+  answers     Json           // User's answers
+  createdAt   DateTime       @default(now())
+
+  // Relations
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  module      TrainingModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([moduleId])
 }
 
 model Declaration {
