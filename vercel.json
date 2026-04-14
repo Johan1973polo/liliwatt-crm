@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/ai/process-events?secret=${CRON_SECRET}",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/calendar/daily-reminder?secret=${CRON_SECRET}",
+      "schedule": "0 7 * * *"
+    }
+  ]
+}

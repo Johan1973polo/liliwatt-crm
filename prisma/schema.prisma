@@ -1,0 +1,296 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  firstName       String?  // Prénom de l'utilisateur
+  lastName        String?  // Nom de l'utilisateur
+  phone           String?  // Numéro de téléphone
+  passwordHash    String
+  role            String   // ADMIN, , REFERENT, VENDEUR
+  specialty       String?  // Spécialisation pour les admins (PRÉSIDENT, DIRECTION COMMERCIALE, etc.)
+  referentId      String?
+  avatar          String?  // Chemin vers l'avatar (/avatars/nom.png)
+  courtierNumber  Int?     @unique // Numéro unique du courtier (ex: 47, 48, 49...)
+  createdAt       DateTime @default(now())
+  isActive        Boolean  @default(true)
+  isAvailable     Boolean? // Statut de disponibilité du vendeur: null = aucune action, true = disponible, false = non disponible
+
+  // Relations
+  referent               User?           @relation("ReferentToVendeurs", fields: [referentId], references: [id])
+  vendeurs               User[]          @relation("ReferentToVendeurs")
+  credentials            Credential[]
+  personalLinks          Link[]          @relation("UserPersonalLinks")
+  teamLinks              Link[]          @relation("ReferentTeamLinks")
+  sentMessages           Message[]       @relation("SentMessages")
+  receivedMessages       Message[]       @relation("ReceivedMessages")
+  requests               Request[]       @relation("UserRequests")
+  assignedRequests       Request[]       @relation("ReferentRequests")
+  vendorRequests         Request[]       @relation("VendorRequests")
+  availabilities         Availability[]
+  notifications          Notification[]
+  calendarEvents         CalendarEvent[]
+  trainingProgress       TrainingProgress[] @relation("SellerProgress")
+  unlockedTrainings      TrainingProgress[] @relation("UnlockedBy")
+
+  @@index([email])
+  @@index([referentId])
+}
+
+model Credential {
+  id                String   @id @default(cuid())
+  userId            String
+  serviceName       String
+  login             String
+  passwordEncrypted String
+  createdAt         DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Link {
+  id              String    @id @default(cuid())
+  scope           String    // GLOBAL, TEAM, USER
+  title           String
+  url             String
+  teamReferentId  String?
+  userId          String?
+  createdAt       DateTime  @default(now())
+  order           Int       @default(0)
+
+  // Relations
+  teamReferent User? @relation("ReferentTeamLinks", fields: [teamReferentId], references: [id], onDelete: Cascade)
+  user         User? @relation("UserPersonalLinks", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([scope])
+  @@index([teamReferentId])
+  @@index([userId])
+}
+
+model Request {
+  id          String   @id @default(cuid())
+  type        String   // DATA_BASE, INVOICE, INTEGRATION, PROBLEME_TECHNIQUE, SOUTIEN_TECHNIQUE, FIN_COLLABORATION
+  userId      String
+  referentId  String
+  vendorId    String?  // ID du vendeur concerné (pour les demandes de facture ou fin de collaboration)
+  status      String   @default("NEW") // NEW, IN_PROGRESS, DONE
+  payloadJson String   // JSON stringifié
+  createdAt   DateTime @default(now())
+
+  // Relations
+  user     User  @relation("UserRequests", fields: [userId], references: [id], onDelete: Cascade)
+  referent User  @relation("ReferentRequests", fields: [referentId], references: [id], onDelete: Cascade)
+  vendor   User? @relation("VendorRequests", fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([referentId])
+  @@index([vendorId])
+  @@index([status])
+  @@index([type])
+}
+
+model Message {
+  id         String    @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  body       String
+  category   String?   // DIRECTION, REFERENT, BACKOFFICE (pour catégoriser les messages des vendeurs)
+  createdAt  DateTime  @default(now())
+  readAt     DateTime?
+
+  // Relations
+  from User @relation("SentMessages", fields: [fromUserId], references: [id], onDelete: Cascade)
+  to   User @relation("ReceivedMessages", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@index([fromUserId])
+  @@index([toUserId])
+  @@index([category])
+}
+
+model Availability {
+  id         String   @id @default(cuid())
+  userId     String
+  date       DateTime
+  slotsJson  String   // JSON stringifié : { morning: bool, afternoon: bool, evening: bool }
+  createdAt  DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  kind      String   // REQUEST, MESSAGE, INVOICE_RECEIVED, SALE_MADE
+  entityId  String   // ID de la Request, du Message, ou du User
+  isRead    Boolean  @default(false)
+  metadata  String?  // JSON stringifié pour données supplémentaires
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+}
+
+model Challenge {
+  id        String   @id @default(cuid())
+  message   String   // Message du challenge (ex: "Le premier à récupérer une facture avant 10h à 100€ cash")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TeamActivity {
+  id                    String   @id @default(cuid())
+  type                  String   // SALE, INVOICE, CUSTOM, MESSAGE
+  amount                Int?     // Montant pour les ventes
+  message               String?  // Message texte (pour type MESSAGE) ou message personnalisé optionnel
+  courtierNumber        Int?     // Numéro du courtier (ex: 47, 48, 49...) - nullable pour migration
+  mentionedCourtierNumber Int?   // Numéro du courtier mentionné/ciblé (pour conversations directes)
+  authorRole            String?  // Rôle de l'auteur (ADMIN, REFERENT, , VENDEUR, AI)
+  authorName            String?  // Nom de l'auteur (pour affichage)
+  fictionalFirstName    String?  // Prénom fictif pour les activités manuelles créées par admin
+  isManual              Boolean  @default(false) // true si créé manuellement par admin, false si automatique
+  isFictional           Boolean  @default(false) // true si message généré par IA (pour future implémentation)
+  replyToId             String?  // ID de l'activité parente (pour les réponses)
+  createdAt             DateTime @default(now())
+
+  // Relations pour les réponses
+  replyTo TeamActivity?  @relation("Replies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies TeamActivity[] @relation("Replies")
+
+  @@index([createdAt])
+  @@index([type])
+  @@index([courtierNumber])
+  @@index([mentionedCourtierNumber])
+  @@index([replyToId])
+}
+
+model FictionalCourtier {
+  id                String   @id @default(cuid())
+  courtierNumber    Int      @unique // Numéro réservé (1-30)
+  firstName         String   // Prénom
+  gender            String   // homme, femme
+  age               Int      // Âge
+  birthDate         DateTime // Date de naissance (pour anniversaires)
+  city              String   // Ville d'origine
+  joinedAt          DateTime // Date d'arrivée dans l'entreprise
+
+  // Personnalité et comportement
+  personality       String   // jovial, sérieux, compétitif, blagueur, motivé, discret, râleur, etc.
+  communicationStyle String  // formel, décontracté, abrégé, émojis, etc.
+  useTutoiement     Boolean  @default(true) // true = tutoie, false = vouvoie
+  hasTypos          Boolean  @default(false) // Fait des fautes d'orthographe
+  typoRate          Float    @default(0.0) // Taux de fautes (0.0 à 0.15)
+  isMorningPerson   Boolean  @default(false) // Actif tôt le matin
+  emojiUsage        String   @default("moderate") // none, low, moderate, high
+
+  // Affinités (JSON array de courtierNumbers)
+  affinitiesJson    String   @default("[]") // Ex: [22, 45, 67]
+
+  // Background et histoire
+  background        String   // "Ancien commercial", "Reconversion", "Première expérience", etc.
+  previousCompanies String?  // Expériences passées dans d'autres sociétés
+  monthlyEarnings   Int      // Gains moyens mensuels (3000-12000)
+  earningsHistory   String   @default("{}") // JSON: { "2024-03": 4500, "2024-04": 5200, ... }
+
+  // Contexte personnel
+  travelPlans       String?  // Projet de voyage si applicable
+  lifeContext       String?  // "Économise pour un appart", "Galère financièrement", etc.
+
+  // Mémoire et conversations
+  memoryJson        String   @default("{}") // Conversations mémorisées avec vrais courtiers
+
+  // Activité
+  lastActive        DateTime @default(now())
+  totalMessages     Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([courtierNumber])
+  @@index([lastActive])
+  @@index([birthDate])
+}
+
+model CalendarEvent {
+  id          String   @id @default(cuid())
+  userId      String   // Propriétaire de l'événement
+  title       String   // Titre de l'événement
+  description String?  // Description optionnelle
+  eventType   String   // RDV_CLIENT, INDISPONIBLE, NE_TRAVAILLE_PAS, FORMATION, RECRUTEMENT, AUTRE
+  color       String   @default("#3b82f6") // Couleur de l'événement
+  startTime   DateTime // Heure de début
+  endTime     DateTime // Heure de fin
+  isAllDay    Boolean  @default(false) // Événement sur toute la journée
+  attendeeIds String   @default("[]") // IDs des participants (JSON array) - pour formations/recrutements multi-participants
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([startTime])
+  @@index([endTime])
+}
+
+model TrainingModule {
+  id                String             @id @default(cuid())
+  title             String             // Titre du module
+  description       String             // Description courte
+  content           String             @db.Text // Contenu complet du module (markdown ou HTML)
+  order             Int                // Ordre d'affichage (1-9)
+  durationEstimated Int                @default(30) // Durée estimée en minutes
+  icon              String             @default("bi-book") // Icône Bootstrap
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  // Relations
+  progress          TrainingProgress[]
+
+  @@index([order])
+}
+
+model TrainingProgress {
+  id            String         @id @default(cuid())
+  sellerId      String         // ID du vendeur
+  moduleId      String         // ID du module
+  status        String         @default("LOCKED") // LOCKED | UNLOCKED | IN_PROGRESS | COMPLETED
+  unlockedBy    String?        // ID de la personne qui a déverrouillé
+  unlockedAt    DateTime?      // Date de déverrouillage
+  startedAt     DateTime?      // Date de début
+  completedAt   DateTime?      // Date de complétion
+  score         Int?           // Score optionnel (0-100)
+  internalNote  String?        @db.Text // Note interne du référent/admin
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  seller        User           @relation("SellerProgress", fields: [sellerId], references: [id], onDelete: Cascade)
+  module        TrainingModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  unlocker      User?          @relation("UnlockedBy", fields: [unlockedBy], references: [id], onDelete: SetNull)
+
+  @@unique([sellerId, moduleId])
+  @@index([sellerId])
+  @@index([moduleId])
+  @@index([status])
+}

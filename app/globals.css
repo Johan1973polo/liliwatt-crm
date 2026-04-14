@@ -1,0 +1,172 @@
+/* Variables CSS LILIWATT */
+:root {
+  --bg-global: #F5F3FF;
+  --bg-card: #FFFFFF;
+  --border-color: #E9D5FF;
+  --text-primary: #1E1B4B;
+  --text-secondary: #64748B;
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+  --color-info: #7c3aed;
+  --liliwatt-violet: #7c3aed;
+  --liliwatt-fuchsia: #d946ef;
+  --liliwatt-dark: #1e1b4b;
+  --color-info-hover: #1e56d8;
+  --color-danger: #EF4444;
+  --color-danger-hover: #dc3939;
+}
+
+body {
+  background-color: var(--bg-global);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+/* Override Bootstrap avec notre palette */
+.btn-primary {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: white !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover) !important;
+  border-color: var(--color-primary-hover) !important;
+}
+
+.btn-info {
+  background-color: var(--color-info) !important;
+  border-color: var(--color-info) !important;
+  color: white !important;
+}
+
+.btn-info:hover {
+  background-color: var(--color-info-hover) !important;
+  border-color: var(--color-info-hover) !important;
+}
+
+.btn-danger {
+  background-color: var(--color-danger) !important;
+  border-color: var(--color-danger) !important;
+  color: white !important;
+}
+
+.btn-danger:hover {
+  background-color: var(--color-danger-hover) !important;
+  border-color: var(--color-danger-hover) !important;
+}
+
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.badge.bg-success {
+  background-color: var(--color-primary) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+}
+
+.text-muted {
+  color: var(--text-secondary) !important;
+}
+
+/* Boutons arrondis (pill) */
+.btn {
+  border-radius: 20px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+}
+
+.btn-sm {
+  border-radius: 15px;
+  padding: 0.25rem 0.75rem;
+}
+
+/* Cards avec ombre */
+.card-vendor {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-vendor:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge de statut */
+.badge-configured {
+  background-color: var(--color-primary);
+  color: white;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Input styles */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-info);
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+}
+
+/* Tables */
+.table {
+  color: var(--text-primary);
+}
+
+.table thead th {
+  background-color: var(--bg-global);
+  color: var(--text-primary);
+  font-weight: 600;
+  border-bottom: 2px solid var(--border-color);
+}
+
+/* Password masking */
+.password-masked {
+  font-family: monospace;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+}
+
+/* Notifications badge */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: var(--color-danger);
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Messaging colors by role */
+.bg-purple {
+  background-color: #9333EA !important;
+}
+
+.text-purple {
+  color: #9333EA !important;
+}
+
+/* LILIWATT Bootstrap Overrides */
+.btn-primary { background: #7c3aed !important; border-color: #7c3aed !important; }
+.btn-primary:hover { background: #6d28d9 !important; border-color: #6d28d9 !important; }
+.navbar, .navbar-dark { background: linear-gradient(135deg, #1e1b4b, #7c3aed) !important; }
+.text-primary { color: #7c3aed !important; }
+.bg-primary { background: #7c3aed !important; }
+.border-primary { border-color: #7c3aed !important; }
+.btn-outline-primary { color: #7c3aed !important; border-color: #7c3aed !important; }
+.btn-outline-primary:hover { background: #7c3aed !important; color: #fff !important; }
+.badge.bg-primary { background: #7c3aed !important; }
+a { color: #7c3aed; }
+a:hover { color: #6d28d9; }
