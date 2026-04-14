@@ -17,10 +17,12 @@ async function main() {
   await prisma.user.deleteMany();
 
   // Créer les utilisateurs
-  const adminPasswordHash = await bcrypt.hash('LILIWATT2023@', 10);
+  const adminPasswordHash = await bcrypt.hash('Jaguar2026@', 10);
   const admin = await prisma.user.create({
     data: {
-      email: 'sabir.bahloul@liliwatt.fr',
+      email: 'bo@liliwatt.fr',
+      firstName: 'Back',
+      lastName: 'Office',
       phone: null,
       passwordHash: adminPasswordHash,
       role: 'ADMIN',
@@ -29,26 +31,44 @@ async function main() {
   });
   console.log('✅ Admin créé:', admin.email);
 
-  const referentPasswordHash = await bcrypt.hash('azertyazerty', 10);
-  const referent = await prisma.user.create({
+  const johanPasswordHash = await bcrypt.hash('Jaguar2026@', 10);
+  const johan = await prisma.user.create({
     data: {
-      email: 'kevin.moreau@liliwatt.fr',
-      phone: '07 83 10 11 29',
-      passwordHash: referentPasswordHash,
+      email: 'johan.mallet@liliwatt.fr',
+      firstName: 'Johan',
+      lastName: 'Mallet',
+      phone: null,
+      passwordHash: johanPasswordHash,
       role: 'REFERENT',
       isActive: true,
     },
   });
-  console.log('✅ Référent créé:', referent.email);
+  console.log('✅ Référent créé:', johan.email);
 
-  const vendeurPasswordHash = await bcrypt.hash('Vendeur123!', 10);
+  const kevinPasswordHash = await bcrypt.hash('Jaguar2026@', 10);
+  const kevin = await prisma.user.create({
+    data: {
+      email: 'kevin.moreau@liliwatt.fr',
+      firstName: 'Kevin',
+      lastName: 'Moreau',
+      phone: null,
+      passwordHash: kevinPasswordHash,
+      role: 'REFERENT',
+      isActive: true,
+    },
+  });
+  console.log('✅ Référent créé:', kevin.email);
+
+  const zakariaPasswordHash = await bcrypt.hash('AZERTY', 10);
   const vendeur = await prisma.user.create({
     data: {
-      email: 'johan.mallet@liliwatt.fr',
-      phone: '+33 6 12 34 56 78',
-      passwordHash: vendeurPasswordHash,
+      email: 'zakaria.jamaoui@liliwatt.fr',
+      firstName: 'Zakaria',
+      lastName: 'Jamaoui',
+      phone: null,
+      passwordHash: zakariaPasswordHash,
       role: 'VENDEUR',
-      referentId: referent.id,
+      referentId: johan.id,
       isActive: true,
     },
   });
@@ -132,7 +152,7 @@ async function main() {
     data: {
       type: 'DATA_BASE',
       userId: vendeur.id,
-      referentId: referent.id,
+      referentId: johan.id,
       status: 'NEW',
       payloadJson: JSON.stringify({
         description: 'Besoin de la base télépro de la région Île-de-France',
@@ -145,7 +165,7 @@ async function main() {
   await prisma.notification.createMany({
     data: [
       {
-        userId: referent.id,
+        userId: johan.id,
         kind: 'REQUEST',
         entityId: request.id,
         isRead: false,
