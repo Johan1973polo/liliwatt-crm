@@ -14,5 +14,7 @@ export async function POST(request: NextRequest) {
     data: { lastSeen: new Date() },
   });
 
+  console.log('PING:', session.user.email, new Date().toISOString());
+
   return NextResponse.json({ ok: true });
 }

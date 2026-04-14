@@ -3,7 +3,6 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Navbar from '@/components/Navbar';
-import Link from 'next/link';
 import VendeursTableau from './VendeursTableau';
 import CredentialsBlock from '../vendeur/CredentialsBlock';
 import LinksBlock from '../vendeur/LinksBlock';
@@ -47,36 +46,10 @@ export default async function ReferentPage() {
       phone: true,
       createdAt: true,
       isActive: true,
-      isAvailable: true,
       courtierNumber: true,
       avatar: true,
     },
     orderBy: { createdAt: 'desc' },
-  });
-
-  // Récupérer les disponibilités des 7 derniers jours pour tous les vendeurs
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const sevenDaysAgo = new Date(today);
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6); // 7 jours incluant aujourd'hui
-
-  const availabilities = await prisma.availability.findMany({
-    where: {
-      date: {
-        gte: sevenDaysAgo,
-        lte: today,
-      },
-      userId: { in: vendeurs.map(v => v.id) },
-    },
-    select: {
-      userId: true,
-      date: true,
-      slotsJson: true,
-    },
-    orderBy: {
-      date: 'desc',
-    },
   });
 
   // Récupérer les notifications non lues (SAUF performances)
@@ -86,16 +59,6 @@ export default async function ReferentPage() {
       isRead: false,
       kind: 'MESSAGE',
     },
-  });
-
-  // Créer une map des disponibilités par userId (pour historique)
-  const availabilitiesMap = new Map<string, Array<{ date: Date; slotsJson: string }>>();
-
-  availabilities.forEach(a => {
-    if (!availabilitiesMap.has(a.userId)) {
-      availabilitiesMap.set(a.userId, []);
-    }
-    availabilitiesMap.get(a.userId)!.push({ date: a.date, slotsJson: a.slotsJson });
   });
 
   // Compter les notifications de performances non lues
@@ -145,12 +108,7 @@ export default async function ReferentPage() {
             </div>
           </div>
         ) : (
-          <VendeursTableau
-            vendeurs={vendeurs.map(v => ({
-              ...v,
-              availabilityHistory: availabilitiesMap.get(v.id) || [],
-            }))}
-          />
+          <VendeursTableau vendeurs={vendeurs} />
         )}
       </div>
     </>

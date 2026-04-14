@@ -3,6 +3,18 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
+function timeAgo(lastSeen: Date | null): string {
+  if (!lastSeen) return '';
+  const diff = Math.floor((Date.now() - lastSeen.getTime()) / 1000);
+  if (diff < 30) return 'En ligne';
+  const mins = Math.floor(diff / 60);
+  if (mins < 1) return 'il y a quelques secondes';
+  if (mins < 60) return `il y a ${mins} min`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `il y a ${hours}h`;
+  return `il y a ${Math.floor(hours / 24)}j`;
+}
+
 export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) {
@@ -11,11 +23,9 @@ export async function GET(request: NextRequest) {
 
   const threshold = new Date(Date.now() - 30 * 1000); // 30 secondes
 
-  // Récupérer les vendeurs visibles selon le rôle
   let whereClause: any = { role: 'VENDEUR', isActive: true };
 
   if (session.user.role === 'VENDEUR') {
-    // Vendeur voit ses collègues du même référent
     const currentUser = await prisma.user.findUnique({
       where: { id: session.user.id },
       select: { referentId: true },
@@ -26,7 +36,6 @@ export async function GET(request: NextRequest) {
   } else if (session.user.role === 'REFERENT') {
     whereClause.referentId = session.user.id;
   }
-  // ADMIN voit tous les vendeurs
 
   const vendeurs = await prisma.user.findMany({
     where: whereClause,
@@ -36,7 +45,6 @@ export async function GET(request: NextRequest) {
       lastName: true,
       email: true,
       lastSeen: true,
-      isAvailable: true,
       courtierNumber: true,
     },
     orderBy: { firstName: 'asc' },
@@ -49,8 +57,8 @@ export async function GET(request: NextRequest) {
     email: v.email,
     courtierNumber: v.courtierNumber,
     isOnline: v.lastSeen ? v.lastSeen > threshold : false,
-    isAvailable: v.isAvailable,
     lastSeen: v.lastSeen,
+    lastSeenAgo: timeAgo(v.lastSeen),
   }));
 
   return NextResponse.json(result);
