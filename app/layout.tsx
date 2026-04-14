@@ -6,6 +6,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import SessionProvider from '@/components/SessionProvider';
 import BootstrapClient from '@/components/BootstrapClient';
+import PingProvider from '@/components/PingProvider';
 
 export const metadata: Metadata = {
   title: 'CRM Télévendeur - LILIWATT',
@@ -24,7 +25,9 @@ export default async function RootLayout({
       <body>
         <SessionProvider session={session}>
           <BootstrapClient />
-          {children}
+          <PingProvider>
+            {children}
+          </PingProvider>
         </SessionProvider>
       </body>
     </html>

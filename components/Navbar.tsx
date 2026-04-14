@@ -109,16 +109,7 @@ export default function Navbar({
     <nav className="navbar navbar-expand-lg navbar-dark border-bottom shadow-sm mb-4">
       <div className="container-fluid">
         <Link href="/" className="navbar-brand d-flex align-items-center">
-          <Image
-            src="/logo-liliwatt.jpg"
-            alt="Logo LILIWATT"
-            width={120}
-            height={45}
-            priority
-            style={{ objectFit: 'contain' }}
-            className="me-2"
-          />
-          <span style={{ color: 'white', fontWeight: 700 }}>Espace LILIWATT</span>
+          <span style={{ color: 'white', fontWeight: 700, fontSize: '18px' }}>Espace LILIWATT</span>
         </Link>
 
         <button

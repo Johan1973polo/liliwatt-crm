@@ -10,6 +10,7 @@ interface TeamMember {
   courtierNumber: number | null;
   isOnline: boolean;
   isAvailable: boolean | null;
+  lastSeen: string | null;
 }
 
 export default function TeamOnlineStatus() {
@@ -27,26 +28,10 @@ export default function TeamOnlineStatus() {
     }
   };
 
-  // Ping pour signaler la présence
-  const ping = async () => {
-    try {
-      await fetch('/api/ping', { method: 'POST' });
-    } catch (e) {
-      // ignore
-    }
-  };
-
   useEffect(() => {
-    ping();
     fetchStatus();
-
-    const pingInterval = setInterval(ping, 30000);
-    const statusInterval = setInterval(fetchStatus, 30000);
-
-    return () => {
-      clearInterval(pingInterval);
-      clearInterval(statusInterval);
-    };
+    const statusInterval = setInterval(fetchStatus, 10000);
+    return () => clearInterval(statusInterval);
   }, []);
 
   const onlineCount = team.filter((m) => m.isOnline).length;
@@ -86,13 +71,18 @@ export default function TeamOnlineStatus() {
                   </div>
                 </div>
                 <div>
-                  {member.isAvailable === true && (
-                    <span className="badge bg-success">Disponible</span>
-                  )}
-                  {member.isAvailable === false && (
-                    <span className="badge bg-danger">Non dispo</span>
-                  )}
-                  {member.isAvailable === null && (
+                  {member.isOnline ? (
+                    <span className="badge bg-success">En ligne</span>
+                  ) : member.lastSeen ? (
+                    <span className="badge bg-secondary" style={{ fontSize: '0.7rem' }}>
+                      Hors ligne {(() => {
+                        const diff = Math.floor((Date.now() - new Date(member.lastSeen).getTime()) / 60000);
+                        if (diff < 1) return 'à l\'instant';
+                        if (diff < 60) return `il y a ${diff} min`;
+                        return `il y a ${Math.floor(diff / 60)}h`;
+                      })()}
+                    </span>
+                  ) : (
                     <span className="badge bg-secondary">-</span>
                   )}
                 </div>

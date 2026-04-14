@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
   }
 
-  const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+  const threshold = new Date(Date.now() - 30 * 1000); // 30 secondes
 
   // Récupérer les vendeurs visibles selon le rôle
   let whereClause: any = { role: 'VENDEUR', isActive: true };
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
     lastName: v.lastName,
     email: v.email,
     courtierNumber: v.courtierNumber,
-    isOnline: v.lastSeen ? v.lastSeen > twoMinutesAgo : false,
+    isOnline: v.lastSeen ? v.lastSeen > threshold : false,
     isAvailable: v.isAvailable,
     lastSeen: v.lastSeen,
   }));

@@ -252,6 +252,12 @@ export default function TrainingManagement({ modules, sellers, userRole }: Train
                       <small className={selectedSeller === seller.id ? 'text-white-50' : 'text-muted'}>
                         {seller.courtierNumber ? `N°${seller.courtierNumber}` : seller.email}
                       </small>
+                      {(seller as any).role === 'REFERENT' && (
+                        <span className="badge ms-2" style={{ background: '#3b82f6', fontSize: '0.65rem' }}>Référent</span>
+                      )}
+                      {(seller as any).role === 'VENDEUR' && (
+                        <span className="badge ms-2" style={{ background: '#7c3aed', fontSize: '0.65rem' }}>Vendeur</span>
+                      )}
                     </div>
                     <span className={`badge ${selectedSeller === seller.id ? 'bg-light text-dark' : 'bg-primary'}`}>
                       {progress}%

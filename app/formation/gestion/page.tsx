@@ -24,12 +24,13 @@ export default async function FormationGestionPage() {
   if (session.user.role === 'ADMIN') {
     // Admin voit tous les vendeurs
     sellers = await prisma.user.findMany({
-      where: { role: 'VENDEUR' },
+      where: { role: { in: ['VENDEUR', 'REFERENT'] } },
       select: {
         id: true,
         firstName: true,
         lastName: true,
         email: true,
+        role: true,
         courtierNumber: true,
         createdAt: true,
         trainingProgress: {
@@ -47,17 +48,20 @@ export default async function FormationGestionPage() {
       orderBy: { firstName: 'asc' },
     });
   } else {
-    // Référent voit uniquement ses vendeurs
+    // Référent voit ses vendeurs + lui-même
     sellers = await prisma.user.findMany({
       where: {
-        role: 'VENDEUR',
-        referentId: session.user.id,
+        OR: [
+          { role: 'VENDEUR', referentId: session.user.id },
+          { id: session.user.id },
+        ],
       },
       select: {
         id: true,
         firstName: true,
         lastName: true,
         email: true,
+        role: true,
         courtierNumber: true,
         createdAt: true,
         trainingProgress: {

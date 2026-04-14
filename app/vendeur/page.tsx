@@ -5,7 +5,6 @@ import { prisma } from '@/lib/prisma';
 import Navbar from '@/components/Navbar';
 import AutoRefresh from '@/components/AutoRefresh';
 import ChallengeAlert from './ChallengeAlert';
-import AutoPing from './AutoPing';
 import MessageBlock from './MessageBlock';
 import RequestsBlock from './RequestsBlock';
 import TeamActivityFeed from './TeamActivityFeed';
@@ -113,7 +112,6 @@ export default async function VendeurPage() {
             )}
           </div>
         </div>
-        <AutoPing />
 
         {/* Challenge du jour */}
         <ChallengeAlert challenge={activeChallenge} />
