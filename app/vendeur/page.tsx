@@ -12,6 +12,10 @@ import MessageBlock from './MessageBlock';
 import RequestsBlock from './RequestsBlock';
 import TeamAnnouncements from './TeamAnnouncements';
 import TeamActivityFeed from './TeamActivityFeed';
+import QuickAccessCards from './QuickAccessCards';
+import VendeurIdentifiants from './VendeurIdentifiants';
+import DeclarationButtons from './DeclarationButtons';
+import TeamOnlineStatus from './TeamOnlineStatus';
 
 // Désactiver le cache pour cette page
 export const revalidate = 0;
@@ -168,6 +172,12 @@ export default async function VendeurPage() {
         {/* Challenge du jour */}
         <ChallengeAlert challenge={activeChallenge} />
 
+        {/* Accès rapides */}
+        <QuickAccessCards />
+
+        {/* Déclarer une action */}
+        <DeclarationButtons />
+
         {/* Annonces à l'équipe - En haut et bien visible */}
         <TeamAnnouncements />
 
@@ -177,12 +187,14 @@ export default async function VendeurPage() {
         <div className="row g-4">
           {/* Colonne de gauche */}
           <div className="col-lg-6">
+            <VendeurIdentifiants />
             <LinksBlock links={allLinks} />
             <CredentialsBlock credentials={credentials} />
           </div>
 
           {/* Colonne de droite */}
           <div className="col-lg-6">
+            <TeamOnlineStatus />
             <MessageBlock referent={referent} />
             <RequestsBlock referentId={referentId || null} />
           </div>

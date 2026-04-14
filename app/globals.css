@@ -161,7 +161,16 @@ h1, h2, h3, h4, h5, h6 {
 /* LILIWATT Bootstrap Overrides */
 .btn-primary { background: #7c3aed !important; border-color: #7c3aed !important; }
 .btn-primary:hover { background: #6d28d9 !important; border-color: #6d28d9 !important; }
-.navbar, .navbar-dark { background: linear-gradient(135deg, #1e1b4b, #7c3aed) !important; }
+.navbar, .navbar-dark { background: linear-gradient(135deg, #1e1b4b, #7c3aed) !important; color: white !important; }
+.navbar a, .navbar .nav-link, .navbar .navbar-brand, .navbar button:not(.btn-outline-danger) { color: white !important; }
+.navbar .nav-link:hover, .navbar .nav-link.active { color: #d946ef !important; }
+.navbar .text-muted { color: rgba(255,255,255,0.8) !important; }
+.navbar .badge.bg-secondary { background: rgba(255,255,255,0.2) !important; }
+.navbar .dropdown-menu { background: #1e1b4b; border: 1px solid rgba(255,255,255,0.1); }
+.navbar .dropdown-item { color: white !important; }
+.navbar .dropdown-item:hover, .navbar .dropdown-item.active { background: rgba(124,58,237,0.5) !important; color: #d946ef !important; }
+.navbar .navbar-toggler { border-color: rgba(255,255,255,0.3); }
+.navbar .navbar-toggler-icon { filter: invert(1); }
 .text-primary { color: #7c3aed !important; }
 .bg-primary { background: #7c3aed !important; }
 .border-primary { border-color: #7c3aed !important; }

@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import Link from 'next/link';
 import Image from 'next/image';
 import DeleteVendorButton from './DeleteVendorButton';
+import RecentDeclarations from './RecentDeclarations';
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
@@ -13,6 +14,17 @@ export default async function AdminPage() {
   if (!session || (session.user.role !== 'ADMIN')) {
     redirect('/auth/signin');
   }
+
+  // Récupérer les déclarations récentes
+  const recentDeclarations = await prisma.declaration.findMany({
+    take: 20,
+    orderBy: { createdAt: 'desc' },
+    include: {
+      user: {
+        select: { firstName: true, lastName: true, email: true, courtierNumber: true },
+      },
+    },
+  });
 
   // Récupérer tous les vendeurs avec leurs identifiants, liens et référent
   const vendeurs = await prisma.user.findMany({
@@ -58,6 +70,9 @@ export default async function AdminPage() {
       />
 
       <div className="container-fluid py-4">
+        {/* Déclarations récentes */}
+        <RecentDeclarations declarations={JSON.parse(JSON.stringify(recentDeclarations))} />
+
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h1 className="h2 mb-0">
             <i className="bi bi-people-fill me-2"></i>

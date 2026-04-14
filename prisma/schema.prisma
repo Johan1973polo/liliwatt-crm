@@ -25,6 +25,7 @@ model User {
   createdAt       DateTime @default(now())
   isActive        Boolean  @default(true)
   isAvailable     Boolean? // Statut de disponibilité du vendeur: null = aucune action, true = disponible, false = non disponible
+  lastSeen        DateTime? // Dernière activité (pour statut en ligne)
 
   // Relations
   referent               User?           @relation("ReferentToVendeurs", fields: [referentId], references: [id])
@@ -42,6 +43,7 @@ model User {
   calendarEvents         CalendarEvent[]
   trainingProgress       TrainingProgress[] @relation("SellerProgress")
   unlockedTrainings      TrainingProgress[] @relation("UnlockedBy")
+  declarations           Declaration[]
 
   @@index([email])
   @@index([referentId])
@@ -293,4 +295,20 @@ model TrainingProgress {
   @@index([sellerId])
   @@index([moduleId])
   @@index([status])
+}
+
+model Declaration {
+  id        String   @id @default(cuid())
+  type      String   // FACTURE | VENTE
+  userId    String
+  societe   String
+  details   Json?
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
 }

@@ -110,7 +110,7 @@ export default function Navbar({
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm mb-4">
+    <nav className="navbar navbar-expand-lg navbar-dark border-bottom shadow-sm mb-4">
       <div className="container-fluid">
         <Link href="/" className="navbar-brand d-flex align-items-center">
           <Image
