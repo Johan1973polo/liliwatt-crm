@@ -6,11 +6,8 @@ import Navbar from '@/components/Navbar';
 import AutoRefresh from '@/components/AutoRefresh';
 import ChallengeAlert from './ChallengeAlert';
 import AvailabilityButtons from './AvailabilityButtons';
-import LinksBlock from './LinksBlock';
-import CredentialsBlock from './CredentialsBlock';
 import MessageBlock from './MessageBlock';
 import RequestsBlock from './RequestsBlock';
-import TeamAnnouncements from './TeamAnnouncements';
 import TeamActivityFeed from './TeamActivityFeed';
 import QuickAccessCards from './QuickAccessCards';
 import VendeurIdentifiants from './VendeurIdentifiants';
@@ -29,42 +26,6 @@ export default async function VendeurPage() {
 
   const userId = session.user.id;
   const referentId = session.user.referentId;
-
-  // Récupérer les liens globaux (pour tous et pour vendeurs)
-  const globalLinks = await prisma.link.findMany({
-    where: {
-      scope: {
-        in: ['GLOBAL', 'GLOBAL_VENDOR']
-      }
-    },
-    orderBy: { order: 'asc' },
-  });
-
-  // Récupérer les liens personnels du vendeur
-  const personalLinks = await prisma.link.findMany({
-    where: {
-      scope: 'USER',
-      userId,
-    },
-    orderBy: { order: 'asc' },
-  });
-
-  // Récupérer les liens d'équipe si le vendeur a un référent
-  const teamLinks = referentId ? await prisma.link.findMany({
-    where: {
-      scope: 'TEAM',
-      teamReferentId: referentId,
-    },
-    orderBy: { order: 'asc' },
-  }) : [];
-
-  const allLinks = [...globalLinks, ...teamLinks, ...personalLinks];
-
-  // Récupérer les identifiants
-  const credentials = await prisma.credential.findMany({
-    where: { userId },
-    orderBy: { createdAt: 'desc' },
-  });
 
   // Récupérer le référent avec téléphone
   const referent = referentId
@@ -160,11 +121,7 @@ export default async function VendeurPage() {
               </div>
             )}
           </div>
-          <div style={{ minWidth: '250px' }}>
-            <p className="text-center mb-2 fw-semibold text-primary">
-              <i className="bi bi-info-circle me-1"></i>
-              Première chose à faire chaque jour : annoncer vos disponibilités
-            </p>
+          <div style={{ minWidth: '200px' }}>
             <AvailabilityButtons initialAvailability={currentUser?.isAvailable ?? null} />
           </div>
         </div>
@@ -175,11 +132,8 @@ export default async function VendeurPage() {
         {/* Accès rapides */}
         <QuickAccessCards />
 
-        {/* Déclarer une action */}
+        {/* Annonces à l'équipe */}
         <DeclarationButtons />
-
-        {/* Annonces à l'équipe - En haut et bien visible */}
-        <TeamAnnouncements />
 
         {/* Fil d'activité de l'équipe */}
         <TeamActivityFeed />
@@ -188,8 +142,6 @@ export default async function VendeurPage() {
           {/* Colonne de gauche */}
           <div className="col-lg-6">
             <VendeurIdentifiants />
-            <LinksBlock links={allLinks} />
-            <CredentialsBlock credentials={credentials} />
           </div>
 
           {/* Colonne de droite */}

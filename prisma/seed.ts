@@ -85,42 +85,24 @@ async function main() {
   });
   console.log('✅ Lien global créé');
 
-  // Créer des identifiants pour le vendeur
+  // Créer les identifiants pour le vendeur (Zoho Mail + RGPD uniquement)
   await prisma.credential.createMany({
     data: [
       {
         userId: vendeur.id,
-        serviceName: 'OHM Énergie',
-        login: 'vendeur.liliwatt',
-        passwordEncrypted: encryptPassword('Ohm2024!'),
+        serviceName: 'Zoho Mail',
+        login: 'zakaria.jamaoui@liliwatt.fr',
+        passwordEncrypted: encryptPassword('ZohoMail2026!'),
       },
       {
         userId: vendeur.id,
-        serviceName: 'Gmail Pro',
-        login: 'vendeur@liliwatt.fr',
-        passwordEncrypted: encryptPassword('Gmail@Secure123'),
-      },
-      {
-        userId: vendeur.id,
-        serviceName: 'Espace Eni',
-        login: 'vendeur_eni',
-        passwordEncrypted: encryptPassword('Eni#Password99'),
-      },
-      {
-        userId: vendeur.id,
-        serviceName: 'Ekwateur',
-        login: 'v.liliwatt',
-        passwordEncrypted: encryptPassword('EN ATTENTE'),
-      },
-      {
-        userId: vendeur.id,
-        serviceName: 'TotalEnergies',
-        login: 'vendeur.total',
-        passwordEncrypted: encryptPassword('Total2024Pro!'),
+        serviceName: 'RGPD',
+        login: 'https://liliwatt-courtier.onrender.com/rgpd/zakaria-jamaoui',
+        passwordEncrypted: encryptPassword('token-rgpd-zakaria'),
       },
     ],
   });
-  console.log('✅ Identifiants créés');
+  console.log('✅ Identifiants créés (Zoho Mail + RGPD)');
 
   // Créer quelques disponibilités
   const today = new Date();
@@ -203,9 +185,10 @@ async function main() {
   console.log('✨ Seeding terminé avec succès !');
   console.log('');
   console.log('📧 Comptes créés :');
-  console.log('   Admin    : sabir.bahloul@liliwatt.fr / LILIWATT2023@');
-  console.log('   Référent : kevin.moreau@liliwatt.fr / azertyazerty (Tel: 07 83 10 11 29)');
-  console.log('   Vendeur  : johan.mallet@liliwatt.fr / Vendeur123! (Rattaché à Kevin)');
+  console.log('   Admin    : bo@liliwatt.fr / Jaguar2026@');
+  console.log('   Référent : johan.mallet@liliwatt.fr / Jaguar2026@');
+  console.log('   Référent : kevin.moreau@liliwatt.fr / Jaguar2026@');
+  console.log('   Vendeur  : zakaria.jamaoui@liliwatt.fr / AZERTY (Rattaché à Johan)');
   console.log('');
 }
 

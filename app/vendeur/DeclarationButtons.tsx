@@ -28,7 +28,7 @@ export default function DeclarationButtons() {
         body: JSON.stringify({ societe: facSociete, type: facType, notes: facNotes }),
       });
       if (res.ok) {
-        setSuccess('Facture déclarée avec succes !');
+        setSuccess('Facture déclarée avec succès !');
         setShowFacture(false);
         setFacSociete('');
         setFacNotes('');
@@ -50,7 +50,7 @@ export default function DeclarationButtons() {
         body: JSON.stringify({ societe: venteSociete, fournisseur: venteFournisseur, segment: venteSegment }),
       });
       if (res.ok) {
-        setSuccess('Vente déclarée ! Toute l\'equipe a ete notifiee !');
+        setSuccess('Vente déclarée ! Toute l\'équipe a été notifiée !');
         setShowVente(false);
         setVenteSociete('');
         setVenteFournisseur('');
@@ -66,9 +66,10 @@ export default function DeclarationButtons() {
     <div className="card mb-4">
       <div className="card-header bg-white">
         <h5 className="mb-0">
-          <i className="bi bi-megaphone me-2 text-primary"></i>
-          Declarer une action
+          <i className="bi bi-megaphone-fill me-2 text-primary"></i>
+          Annonces à l&apos;équipe
         </h5>
+        <small className="text-muted">Partagez vos réussites avec toute l&apos;équipe !</small>
       </div>
       <div className="card-body">
         {success && (
@@ -77,43 +78,43 @@ export default function DeclarationButtons() {
           </div>
         )}
 
-        <div className="d-flex gap-3">
+        <div className="d-flex flex-column gap-3">
           <button
-            className="btn btn-primary flex-fill py-3"
+            className="btn text-white py-3 w-100"
             onClick={() => { setShowFacture(true); setShowVente(false); }}
-            style={{ fontSize: '1.1rem' }}
+            style={{ fontSize: '1.1rem', background: 'linear-gradient(135deg, #7c3aed, #6d28d9)', border: 'none', borderRadius: '12px' }}
           >
-            <i className="bi bi-file-earmark-text me-2"></i>
-            J&apos;ai recupere une facture
+            <i className="bi bi-bell-fill me-2"></i>
+            J&apos;ai récupéré une facture !
           </button>
           <button
-            className="btn flex-fill py-3"
+            className="btn text-white py-3 w-100"
             onClick={() => { setShowVente(true); setShowFacture(false); }}
-            style={{ fontSize: '1.1rem', background: 'linear-gradient(135deg, #d946ef, #7c3aed)', color: 'white', border: 'none' }}
+            style={{ fontSize: '1.1rem', background: 'linear-gradient(135deg, #d946ef, #7c3aed)', border: 'none', borderRadius: '12px' }}
           >
-            <i className="bi bi-trophy me-2"></i>
-            J&apos;ai signe un client !
+            <i className="bi bi-trophy-fill me-2"></i>
+            J&apos;ai signé un client !
           </button>
         </div>
 
-        {/* Modal Facture */}
+        {/* Formulaire Facture */}
         {showFacture && (
           <div className="mt-3 p-3 rounded" style={{ background: '#f8f5ff', border: '1px solid #e9d5ff' }}>
-            <h6 className="mb-3"><i className="bi bi-file-earmark-text me-2"></i>Declarer une facture</h6>
+            <h6 className="mb-3"><i className="bi bi-bell-fill me-2 text-primary"></i>Déclarer une facture récupérée</h6>
             <div className="mb-2">
               <input
                 type="text"
                 className="form-control"
-                placeholder="Nom de la societe"
+                placeholder="Nom de la société"
                 value={facSociete}
                 onChange={(e) => setFacSociete(e.target.value)}
               />
             </div>
             <div className="mb-2">
               <select className="form-select" value={facType} onChange={(e) => setFacType(e.target.value)}>
-                <option value="electricite">Electricite</option>
+                <option value="electricite">Électricité</option>
                 <option value="gaz">Gaz</option>
-                <option value="les_deux">Electricite + Gaz</option>
+                <option value="les_deux">Électricité + Gaz</option>
               </select>
             </div>
             <div className="mb-3">
@@ -134,15 +135,15 @@ export default function DeclarationButtons() {
           </div>
         )}
 
-        {/* Modal Vente */}
+        {/* Formulaire Vente */}
         {showVente && (
           <div className="mt-3 p-3 rounded" style={{ background: 'linear-gradient(135deg, #fdf4ff, #f5f3ff)', border: '1px solid #e9d5ff' }}>
-            <h6 className="mb-3"><i className="bi bi-trophy me-2"></i>Declarer une vente</h6>
+            <h6 className="mb-3"><i className="bi bi-trophy-fill me-2" style={{ color: '#d946ef' }}></i>Déclarer une vente signée</h6>
             <div className="mb-2">
               <input
                 type="text"
                 className="form-control"
-                placeholder="Nom de la societe"
+                placeholder="Nom de la société"
                 value={venteSociete}
                 onChange={(e) => setVenteSociete(e.target.value)}
               />
@@ -155,7 +156,7 @@ export default function DeclarationButtons() {
                 <option value="TotalEnergies">TotalEnergies</option>
                 <option value="Vattenfall">Vattenfall</option>
                 <option value="Eni">Eni</option>
-                <option value="OHM Énergie">OHM Energie</option>
+                <option value="OHM Énergie">OHM Énergie</option>
                 <option value="Ekwateur">Ekwateur</option>
                 <option value="Alpiq">Alpiq</option>
                 <option value="Primeo">Primeo</option>
@@ -167,7 +168,7 @@ export default function DeclarationButtons() {
             <div className="mb-3">
               <select className="form-select" value={venteSegment} onChange={(e) => setVenteSegment(e.target.value)}>
                 <option value="C5">C5 (Bleu) - &lt; 36 kVA</option>
-                <option value="C4">C4 (Jaune) - 36 a 250 kVA</option>
+                <option value="C4">C4 (Jaune) - 36 à 250 kVA</option>
                 <option value="C3">C3 (Vert) - &gt; 250 kVA</option>
                 <option value="Gaz">Gaz</option>
               </select>
@@ -179,7 +180,7 @@ export default function DeclarationButtons() {
                 onClick={handleVente}
                 disabled={loading || !venteSociete.trim() || !venteFournisseur}
               >
-                {loading ? <span className="spinner-border spinner-border-sm"></span> : 'Declarer la vente !'}
+                {loading ? <span className="spinner-border spinner-border-sm"></span> : 'Déclarer la vente !'}
               </button>
               <button className="btn btn-outline-secondary" onClick={() => setShowVente(false)}>Annuler</button>
             </div>
