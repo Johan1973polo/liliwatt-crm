@@ -180,6 +180,25 @@ async function main() {
   });
   console.log('✅ Notifications créées');
 
+  // Créer les modules de formation
+  await prisma.trainingModule.deleteMany();
+  const trainingModulesData = JSON.parse(
+    require('fs').readFileSync(require('path').join(__dirname, 'modules-formation.json'), 'utf-8')
+  );
+  for (const mod of trainingModulesData) {
+    await prisma.trainingModule.create({
+      data: {
+        title: mod.title,
+        description: mod.description,
+        content: mod.content,
+        order: mod.order,
+        durationEstimated: mod.durationEstimated,
+        icon: mod.icon,
+      },
+    });
+  }
+  console.log(`✅ ${trainingModulesData.length} modules de formation créés`);
+
   console.log('');
   console.log('✨ Seeding terminé avec succès !');
   console.log('');
