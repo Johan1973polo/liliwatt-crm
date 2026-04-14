@@ -27,22 +27,22 @@ export async function GET(request: NextRequest) {
       const referentVendeurs = await prisma.user.findMany({
         where: {
           role: 'VENDEUR',
-          referentId: session.user.id,
+          referentId: session.user.id
         },
-        select: { id: true },
+        select: { id: true }
       });
 
       const admins = await prisma.user.findMany({
         where: { role: 'ADMIN' },
-        select: { id: true },
+        select: { id: true }
       });
 
       const otherReferents = await prisma.user.findMany({
         where: {
           role: 'REFERENT',
-          id: { not: session.user.id },
+          id: { not: session.user.id }
         },
-        select: { id: true },
+        select: { id: true }
       });
 
       const vendeurIds = referentVendeurs.map(v => v.id);
@@ -51,14 +51,14 @@ export async function GET(request: NextRequest) {
 
       whereClause = {
         userId: {
-          in: [session.user.id, ...vendeurIds, ...adminIds, ...referentIds],
-        },
+          in: [session.user.id, ...vendeurIds, ...adminIds, ...referentIds]
+        }
       };
     } else if (session.user.role === 'VENDEUR') {
       // Vendeur voit: son agenda + agenda de SON référent
       const vendeur = await prisma.user.findUnique({
         where: { id: session.user.id },
-        select: { referentId: true },
+        select: { referentId: true }
       });
 
       const userIds = [session.user.id];
@@ -68,12 +68,10 @@ export async function GET(request: NextRequest) {
 
       whereClause = {
         userId: {
-          in: userIds,
-        },
+          in: userIds
+        }
       };
-    } else if (session.user.role ===) {
-      //  voit TOUT (lecture seule)
-      whereClause = {};
+    ;
     } else {
       // Rôle inconnu
       return NextResponse.json({ error: 'Accès non autorisé' }, { status: 403 });
@@ -83,7 +81,7 @@ export async function GET(request: NextRequest) {
     if (startDate && endDate) {
       whereClause.startTime = {
         gte: new Date(startDate),
-        lte: new Date(endDate),
+        lte: new Date(endDate)
       };
     }
 
@@ -98,13 +96,13 @@ export async function GET(request: NextRequest) {
             lastName: true,
             role: true,
             avatar: true,
-            courtierNumber: true,
-          },
-        },
+            courtierNumber: true
+          }
+        }
       },
       orderBy: {
-        startTime: 'asc',
-      },
+        startTime: 'asc'
+      }
     });
 
     return NextResponse.json({ events });
@@ -124,7 +122,7 @@ export async function POST(request: NextRequest) {
     }
 
     //  n'a pas accès à l'agenda
-    if (session.user.role ===) {
+    if false {
       return NextResponse.json({ error: 'Accès non autorisé' }, { status: 403 });
     }
 
@@ -138,7 +136,7 @@ export async function POST(request: NextRequest) {
       startTime,
       endTime,
       isAllDay,
-      attendeeIds,
+      attendeeIds
     } = body;
 
     // Validation
@@ -163,8 +161,8 @@ export async function POST(request: NextRequest) {
           select: {
             id: true,
             role: true,
-            referentId: true,
-          },
+            referentId: true
+          }
         });
 
         if (!targetUser) {
@@ -209,7 +207,7 @@ export async function POST(request: NextRequest) {
       select: {
         title: true,
         startTime: true,
-        endTime: true,
+        endTime: true
       }
     });
 
@@ -243,7 +241,7 @@ export async function POST(request: NextRequest) {
         startTime: newStartTime,
         endTime: newEndTime,
         isAllDay: isAllDay || false,
-        attendeeIds: attendeeIds || '[]',
+        attendeeIds: attendeeIds || '[]'
       },
       include: {
         user: {
@@ -254,10 +252,10 @@ export async function POST(request: NextRequest) {
             lastName: true,
             role: true,
             avatar: true,
-            courtierNumber: true,
-          },
-        },
-      },
+            courtierNumber: true
+          }
+        }
+      }
     });
 
     // Créer des notifications
@@ -267,7 +265,7 @@ export async function POST(request: NextRequest) {
     if (targetUserId !== session.user.id) {
       const creator = await prisma.user.findUnique({
         where: { id: session.user.id },
-        select: { email: true, firstName: true, lastName: true },
+        select: { email: true, firstName: true, lastName: true }
       });
 
       const creatorName = creator?.firstName && creator?.lastName
@@ -285,8 +283,8 @@ export async function POST(request: NextRequest) {
           startTime,
           endTime,
           creatorId: session.user.id,
-          creatorName,
-        }),
+          creatorName
+        })
       });
     }
 
@@ -296,7 +294,7 @@ export async function POST(request: NextRequest) {
         const participantIds = JSON.parse(attendeeIds);
         const creator = await prisma.user.findUnique({
           where: { id: session.user.id },
-          select: { email: true, firstName: true, lastName: true },
+          select: { email: true, firstName: true, lastName: true }
         });
 
         const creatorName = creator?.firstName && creator?.lastName
@@ -317,8 +315,8 @@ export async function POST(request: NextRequest) {
                 startTime,
                 endTime,
                 creatorId: session.user.id,
-                creatorName,
-              }),
+                creatorName
+              })
             });
           }
         }
@@ -330,7 +328,7 @@ export async function POST(request: NextRequest) {
     // Créer toutes les notifications en une fois
     if (notifications.length > 0) {
       await prisma.notification.createMany({
-        data: notifications,
+        data: notifications
       });
     }
 

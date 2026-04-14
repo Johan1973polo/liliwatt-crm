@@ -6,7 +6,7 @@ import { put } from '@vercel/blob';
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
 
-  if (!session || (session.user.role !== 'ADMIN' && session.user.role !== && session.user.role !== 'REFERENT')) {
+  if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'REFERENT')) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
   }
 
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     // Upload vers Vercel Blob
     const blob = await put(filename, file, {
-      access: 'public',
+      access: 'public'
     });
 
     // Retourner l'URL publique du blob

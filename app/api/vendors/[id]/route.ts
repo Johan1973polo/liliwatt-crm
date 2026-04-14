@@ -20,9 +20,7 @@ export async function PUT(
   // Vérifier les permissions
   if (session.user.role === 'ADMIN') {
     // Admin peut tout modifier
-  } else if (session.user.role ===) {
-    // Back-office peut modifier tous les vendeurs
-  } else if (session.user.role === 'REFERENT') {
+   else if (session.user.role === 'REFERENT') {
     // Référent peut modifier uniquement ses vendeurs
     const vendor = await prisma.user.findUnique({
       where: { id: vendorId },
@@ -63,7 +61,7 @@ export async function PUT(
     }
 
     // Les admins et le back-office peuvent modifier les liens personnels
-    if (session.user.role === 'ADMIN' || session.user.role ===) {
+    if (session.user.role === 'ADMIN') {
       // Supprimer les anciens liens pour les recréer
       await prisma.link.deleteMany({
         where: { userId: vendorId, scope: 'USER' },
@@ -105,9 +103,7 @@ export async function DELETE(
   // Vérifier les permissions
   if (session.user.role === 'ADMIN') {
     // Admin peut tout supprimer
-  } else if (session.user.role ===) {
-    // Back-office peut supprimer tous les vendeurs
-  } else if (session.user.role === 'REFERENT') {
+   else if (session.user.role === 'REFERENT') {
     // Référent peut supprimer uniquement ses vendeurs
     const vendor = await prisma.user.findUnique({
       where: { id: vendorId },

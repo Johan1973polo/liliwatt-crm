@@ -40,14 +40,7 @@ export default async function CalendarPage() {
         { email: 'asc' },
       ],
     });
-  } else if (session.user.role ===) {
-    // Back-office voit TOUS les agendas mais en LECTURE SEULE
-    canEdit = false;
-    viewableUsers = await prisma.user.findMany({
-      where: {
-        role: {
-          not:,
-        },
+  ,
       },
       select: {
         id: true,

@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
       });
 
       const backofficeUsers = await prisma.user.findMany({
-        where: { role: },
+        where: {},
         select: { id: true, email: true, avatar: true, phone: true },
       });
 
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
     } else if (type === 'backoffice-vendeur') {
       // Récupérer toutes les paires backoffice-vendeur qui ont échangé des messages
       const backofficeUsers = await prisma.user.findMany({
-        where: { role: },
+        where: {},
         select: { id: true, email: true, avatar: true, phone: true },
       });
 

@@ -24,7 +24,7 @@ export default function AdminMessagesInterface({
   currentUserId,
   currentUserRole,
   referents,
-  vendeurs,
+  vendeurs
 }: {
   currentUserId: string;
   currentUserRole?: string;
@@ -86,8 +86,8 @@ export default function AdminMessagesInterface({
         body: JSON.stringify({
           toUserId: selectedUserId,
           body: newMessage,
-          category,
-        }),
+          category
+        })
       });
 
       if (response.ok) {
@@ -259,7 +259,7 @@ export default function AdminMessagesInterface({
                 style={{
                   height: '500px',
                   overflowY: 'auto',
-                  backgroundColor: '#f8f9fa',
+                  backgroundColor: '#f8f9fa'
                 }}
               >
                 {messages.length === 0 ? (
@@ -336,7 +336,7 @@ export default function AdminMessagesInterface({
                                 day: '2-digit',
                                 month: '2-digit',
                                 hour: '2-digit',
-                                minute: '2-digit',
+                                minute: '2-digit'
                               })}
                             </p>
                           </div>

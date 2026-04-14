@@ -19,7 +19,7 @@ export async function POST(
   try {
     const credential = await prisma.credential.findUnique({
       where: { id: credentialId },
-      include: { user: true },
+      include: { user: true }
     });
 
     if (!credential) {
@@ -41,7 +41,7 @@ export async function POST(
         sessionUserId: session.user.id,
         credentialUserId: credential.userId,
         credentialUserRole: credential.user.role,
-        credentialUserReferentId: credential.user.referentId,
+        credentialUserReferentId: credential.user.referentId
       });
       return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
     }

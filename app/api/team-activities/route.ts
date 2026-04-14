@@ -14,18 +14,18 @@ export async function GET(request: NextRequest) {
     // Récupérer la date de création de l'utilisateur pour filtrer l'historique
     const currentUser = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { createdAt: true, role: true },
+      select: { createdAt: true, role: true }
     });
 
     // Construire le filtre de date selon le rôle
     const whereClause: any = {
-      type: { in: ['SALE', 'INVOICE'] },
+      type: { in: ['SALE', 'INVOICE'] }
     };
 
     // Si c'est un VENDEUR, filtrer les activités créées après sa date de création
     if (currentUser?.role === 'VENDEUR' && currentUser.createdAt) {
       whereClause.createdAt = {
-        gte: currentUser.createdAt,
+        gte: currentUser.createdAt
       };
     }
 
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     const activities = await prisma.teamActivity.findMany({
       where: whereClause,
       orderBy: { createdAt: 'desc' },
-      take: 50,
+      take: 50
     });
 
     // Récupérer tous les courtierNumbers uniques
@@ -42,12 +42,12 @@ export async function GET(request: NextRequest) {
     // Récupérer les prénoms correspondants
     const users = await prisma.user.findMany({
       where: {
-        courtierNumber: { in: courtierNumbers as number[] },
+        courtierNumber: { in: courtierNumbers as number[] }
       },
       select: {
         courtierNumber: true,
-        firstName: true,
-      },
+        firstName: true
+      }
     });
 
     // Créer un map courtierNumber -> firstName
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     // Enrichir les activités avec le firstName (priorité au fictionalFirstName)
     const enrichedActivities = activities.map(activity => ({
       ...activity,
-      firstName: activity.fictionalFirstName || (activity.courtierNumber ? courtierMap.get(activity.courtierNumber) : null),
+      firstName: activity.fictionalFirstName || (activity.courtierNumber ? courtierMap.get(activity.courtierNumber) : null)
     }));
 
     return NextResponse.json({ activities: enrichedActivities });
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
       // Tout utilisateur connecté peut poster un message
       const currentUser = await prisma.user.findUnique({
         where: { id: session.user.id },
-        select: { courtierNumber: true, role: true, email: true },
+        select: { courtierNumber: true, role: true, email: true }
       });
 
       if (!message || !message.trim()) {
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
       // Vérifier si c'est une réponse valide
       if (replyToId) {
         const parentActivity = await prisma.teamActivity.findUnique({
-          where: { id: replyToId },
+          where: { id: replyToId }
         });
 
         if (!parentActivity) {
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
           authorName: authorName,
           replyToId: replyToId || null,
           isManual: false, // Message normal d'un utilisateur réel
-        },
+        }
       });
 
       return NextResponse.json({ success: true, activity });
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
 
       // SÉCURITÉ : Vérifier que le numéro n'appartient PAS à un vrai vendeur
       const existingVendor = await prisma.user.findUnique({
-        where: { courtierNumber: parseInt(courtierNumber) },
+        where: { courtierNumber: parseInt(courtierNumber) }
       });
 
       if (existingVendor) {
@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
           courtierNumber: parseInt(courtierNumber),
           fictionalFirstName: fictionalFirstName || null,
           isManual: true, // Créé manuellement par l'admin
-        },
+        }
       });
 
       return NextResponse.json({ success: true, activity });
@@ -188,7 +188,7 @@ export async function DELETE(request: NextRequest) {
 
   try {
     await prisma.teamActivity.delete({
-      where: { id },
+      where: { id }
     });
 
     return NextResponse.json({ success: true });

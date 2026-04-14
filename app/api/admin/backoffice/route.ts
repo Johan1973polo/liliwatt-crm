@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
         phone: phone || null,
         avatar: avatar || null,
         passwordHash,
-        role:,
+        
         isActive: true,
       },
     });

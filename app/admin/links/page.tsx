@@ -8,7 +8,7 @@ import GlobalLinksManager from './GlobalLinksManager';
 export default async function AdminLinksPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || (session.user.role !== 'ADMIN' && session.user.role !==)) {
+  if (!session || (session.user.role !== 'ADMIN')) {
     redirect('/auth/signin');
   }
 

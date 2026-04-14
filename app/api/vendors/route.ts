@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
   // Seuls l'admin et le back-office peuvent créer des vendeurs
   // Les référents doivent maintenant faire une demande d'intégration
-  if (session.user.role !== 'ADMIN' && session.user.role !==) {
+  if (session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Non autorisé. Veuillez faire une demande d\'intégration.' }, { status: 403 });
   }
 

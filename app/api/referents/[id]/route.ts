@@ -11,7 +11,7 @@ export async function PUT(
 ) {
   const session = await getServerSession(authOptions);
 
-  if (!session || (session.user.role !== 'ADMIN' && session.user.role !==)) {
+  if (!session || (session.user.role !== 'ADMIN')) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
   }
 
@@ -67,7 +67,7 @@ export async function PATCH(
 ) {
   const session = await getServerSession(authOptions);
 
-  if (!session || (session.user.role !== 'ADMIN' && session.user.role !==)) {
+  if (!session || (session.user.role !== 'ADMIN')) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
   }
 
@@ -121,7 +121,7 @@ export async function DELETE(
 ) {
   const session = await getServerSession(authOptions);
 
-  if (!session || (session.user.role !== 'ADMIN' && session.user.role !==)) {
+  if (!session || (session.user.role !== 'ADMIN')) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
   }
 

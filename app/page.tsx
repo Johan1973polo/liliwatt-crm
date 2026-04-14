@@ -12,9 +12,7 @@ export default async function HomePage() {
   // Redirection selon le rôle
   if (session.user.role === 'ADMIN') {
     redirect('/admin');
-  } else if (session.user.role ===) {
-    redirect('/backoffice');
-  } else if (session.user.role === 'REFERENT') {
+   else if (session.user.role === 'REFERENT') {
     redirect('/referent');
   } else if (session.user.role === 'VENDEUR') {
     redirect('/vendeur');

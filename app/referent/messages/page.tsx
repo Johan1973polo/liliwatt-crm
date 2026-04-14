@@ -33,7 +33,7 @@ export default async function ReferentMessagesPage() {
 
   // Récupérer tous les utilisateurs Back-Office
   const backoffice = await prisma.user.findMany({
-    where: { role: },
+    where: {},
     select: { id: true, email: true, phone: true, avatar: true },
     orderBy: { createdAt: 'desc' },
   });

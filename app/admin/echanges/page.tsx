@@ -26,7 +26,7 @@ export default async function AdminExchangesPage() {
   });
 
   const backofficeUsers = await prisma.user.findMany({
-    where: { role: },
+    where: {},
     select: { id: true, email: true, avatar: true, phone: true },
     orderBy: { email: 'asc' },
   });
