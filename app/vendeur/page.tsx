@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 import Navbar from '@/components/Navbar';
 import AutoRefresh from '@/components/AutoRefresh';
 import ChallengeAlert from './ChallengeAlert';
-import AvailabilityButtons from './AvailabilityButtons';
+import AutoPing from './AutoPing';
 import MessageBlock from './MessageBlock';
 import RequestsBlock from './RequestsBlock';
 import TeamActivityFeed from './TeamActivityFeed';
@@ -60,14 +60,6 @@ export default async function VendeurPage() {
     },
   });
 
-  const backofficeCount = await prisma.message.count({
-    where: {
-      toUserId: userId,
-      category: 'BACKOFFICE',
-      readAt: null,
-    },
-  });
-
   // Récupérer le challenge actif
   const activeChallenge = await prisma.challenge.findFirst({
     where: { isActive: true },
@@ -75,10 +67,10 @@ export default async function VendeurPage() {
     select: { message: true },
   });
 
-  // Récupérer le statut de disponibilité et le numéro de courtier
+  // Récupérer le numéro de courtier
   const currentUser = await prisma.user.findUnique({
     where: { id: userId },
-    select: { isAvailable: true, courtierNumber: true },
+    select: { courtierNumber: true },
   });
 
   // Compter les notifications de performances non lues
@@ -100,7 +92,6 @@ export default async function VendeurPage() {
         notificationCount={notificationCount}
         directionMessageCount={directionCount}
         referentMessageCount={referentCount}
-        backofficeMessageCount={backofficeCount}
         performancesActivityCount={performancesActivityCount}
       />
 
@@ -121,10 +112,8 @@ export default async function VendeurPage() {
               </div>
             )}
           </div>
-          <div style={{ minWidth: '200px' }}>
-            <AvailabilityButtons initialAvailability={currentUser?.isAvailable ?? null} />
-          </div>
         </div>
+        <AutoPing />
 
         {/* Challenge du jour */}
         <ChallengeAlert challenge={activeChallenge} />

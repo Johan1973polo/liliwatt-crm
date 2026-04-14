@@ -98,7 +98,6 @@ export default async function PerformancesPage() {
         notificationCount={notificationCount}
         directionMessageCount={directionCount}
         referentMessageCount={referentCount}
-        backofficeMessageCount={backofficeCount}
         performancesActivityCount={performancesActivityCount}
       />
 

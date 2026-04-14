@@ -77,7 +77,6 @@ export default async function VendeurDirectionMessagesPage() {
         notificationCount={notificationCount}
         directionMessageCount={directionCount}
         referentMessageCount={referentCount}
-        backofficeMessageCount={backofficeCount}
       />
 
       <div className="container py-4">

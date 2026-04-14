@@ -12,7 +12,6 @@ interface NavbarProps {
   notificationCount?: number;
   directionMessageCount?: number;
   referentMessageCount?: number;
-  backofficeMessageCount?: number;
   performancesActivityCount?: number;
 }
 
@@ -23,7 +22,6 @@ export default function Navbar({
   notificationCount = 0,
   directionMessageCount = 0,
   referentMessageCount = 0,
-  backofficeMessageCount = 0,
   performancesActivityCount = 0
 }: NavbarProps) {
   const pathname = usePathname();
@@ -55,7 +53,6 @@ export default function Navbar({
             { href: '/admin', label: 'Vendeurs', icon: 'bi-people' },
             { href: '/admin/referents', label: 'Référents', icon: 'bi-person-badge' },
             { href: '/admin/users', label: 'Admins', icon: 'bi-person-gear' },
-            { href: '/admin/backoffice', label: 'Back-Office', icon: 'bi-briefcase' },
           ],
         },
         {
@@ -104,7 +101,6 @@ export default function Navbar({
         { href: '/performances', label: 'Performances', icon: 'bi-graph-up-arrow', count: performancesActivityCount, badgeColor: 'success' },
         { href: '/vendeur/messages/direction', label: 'Direction', icon: 'bi-chat-left-text', count: directionMessageCount, badgeColor: 'danger' },
         { href: '/vendeur/messages/referent', label: 'Référent', icon: 'bi-chat-right-text', count: referentMessageCount, badgeColor: 'primary' },
-        { href: '/vendeur/messages/backoffice', label: 'Back-Office', icon: 'bi-chat-square-text', count: backofficeMessageCount, badgeColor: 'warning' },
       ];
     }
   };
@@ -122,7 +118,7 @@ export default function Navbar({
             style={{ objectFit: 'contain' }}
             className="me-2"
           />
-          <span className="fw-bold text-primary">CRM Télévendeur</span>
+          <span style={{ color: 'white', fontWeight: 700 }}>Espace LILIWATT</span>
         </Link>
 
         <button
@@ -223,7 +219,12 @@ export default function Navbar({
                 {userEmail} <span className="badge bg-secondary ms-1">{getRoleLabel(userRole)}</span>
               </span>
             </span>
-            <button onClick={() => signOut({ callbackUrl: '/auth/signin' })} className="btn btn-outline-danger btn-sm">
+            <button
+              onClick={() => signOut({ callbackUrl: '/auth/signin' })}
+              style={{ background: '#dc2626', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+              onMouseEnter={(e) => { (e.target as HTMLButtonElement).style.background = '#b91c1c'; }}
+              onMouseLeave={(e) => { (e.target as HTMLButtonElement).style.background = '#dc2626'; }}
+            >
               <i className="bi bi-box-arrow-right me-1"></i>
               Déconnexion
             </button>
