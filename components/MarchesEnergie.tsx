@@ -109,9 +109,9 @@ function InfoPanel() {
       <button
         onClick={() => setOpen(!open)}
         style={{
-          display: 'block', width: '100%', background: 'rgba(124,58,237,0.1)',
+          display: 'block', width: '100%', background: '#0f0c29',
           border: '1px solid rgba(124,58,237,0.3)', borderRadius: '8px',
-          padding: '10px 16px', color: '#ffffff', fontSize: '12px',
+          padding: '10px 16px', color: 'rgba(255,255,255,0.6)', fontSize: '12px',
           cursor: 'pointer', textAlign: 'center', transition: 'background 0.2s',
         }}
         onMouseEnter={e => { (e.target as HTMLElement).style.background = 'rgba(124,58,237,0.15)'; }}

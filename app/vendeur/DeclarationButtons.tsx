@@ -51,15 +51,15 @@ export default function DeclarationButtons() {
   };
 
   return (
-    <div style={{ borderRadius: '14px', overflow: 'hidden', marginBottom: '20px', border: '1px solid #dcfce7' }}>
+    <div style={{ borderRadius: '14px', overflow: 'hidden', marginBottom: '20px', border: '1px solid #fde68a' }}>
       {/* Bandeau header vert */}
-      <div style={{ background: 'linear-gradient(135deg, #15803d, #16a34a)', padding: '10px 20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ background: 'linear-gradient(90deg, #854d0e, #ca8a04)', padding: '10px 20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }}></span>
-        <span style={{ color: 'white', fontSize: '13px', fontWeight: 500 }}>📣 Annonces à l&apos;équipe</span>
+        <span style={{ color: 'white', fontSize: '13px', fontWeight: 500 }}>🏆 Annonces à l&apos;équipe</span>
       </div>
 
       {/* Corps */}
-      <div style={{ background: '#f0fdf4', padding: '20px 24px' }}>
+      <div style={{ background: '#fffbeb', padding: '20px 24px' }}>
         {success && (
           <div className="alert alert-success py-2 mb-3">
             <i className="bi bi-check-circle me-2"></i>{success}
@@ -96,11 +96,11 @@ export default function DeclarationButtons() {
             />
           </div>
 
-          {/* Bouton Vente - vert */}
+          {/* Bouton Vente - gold */}
           <button
             onClick={() => { setShowVente(true); setShowFacture(false); }}
             style={{
-              background: '#16a34a', border: 'none', borderRadius: '14px', padding: '20px 16px',
+              background: 'linear-gradient(135deg, #854d0e, #ca8a04, #fbbf24, #ca8a04, #854d0e)', border: 'none', borderRadius: '14px', padding: '20px 16px',
               color: 'white', cursor: 'pointer', display: 'flex', flexDirection: 'column',
               alignItems: 'center', justifyContent: 'center', gap: '10px', transition: 'filter 0.2s',
             }}
