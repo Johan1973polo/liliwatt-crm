@@ -9,14 +9,12 @@ const quickLinks = [
 
 export default function QuickAccessCards() {
   return (
-    <div className="card mb-4">
-      <div className="card-header bg-white">
-        <h5 className="mb-0">
-          <i className="bi bi-lightning-charge me-2 text-primary"></i>
-          Mes accès rapides
-        </h5>
+    <div style={{ borderRadius: '14px', overflow: 'hidden', marginBottom: '20px', border: '1px solid #e9d5ff' }}>
+      <div style={{ background: '#7c3aed', padding: '10px 20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }}></span>
+        <span style={{ color: 'white', fontSize: '13px', fontWeight: 500 }}>⚡ Mes accès rapides</span>
       </div>
-      <div className="card-body">
+      <div style={{ background: 'white', padding: '16px 20px' }}>
         <div className="row g-3">
           {quickLinks.map((link) => (
             <div className="col-6 col-md-3" key={link.label}>
@@ -25,20 +23,12 @@ export default function QuickAccessCards() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="d-block text-decoration-none h-100"
-                style={{
-                  background: link.color,
-                  borderRadius: '12px',
-                  padding: '20px 12px',
-                  textAlign: 'center',
-                  transition: 'filter 0.2s',
-                }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.filter = 'brightness(0.85)'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.filter = 'none'; }}
+                style={{ background: link.color, borderRadius: '12px', padding: '20px 12px', textAlign: 'center', transition: 'filter 0.2s' }}
+                onMouseEnter={e => { (e.currentTarget).style.filter = 'brightness(0.85)'; }}
+                onMouseLeave={e => { (e.currentTarget).style.filter = 'none'; }}
               >
                 <span style={{ fontSize: '2rem', display: 'block' }}>{link.emoji}</span>
-                <span style={{ color: 'white', fontWeight: 600, fontSize: '0.9rem', marginTop: '8px', display: 'block' }}>
-                  {link.label}
-                </span>
+                <span style={{ color: 'white', fontWeight: 600, fontSize: '0.9rem', marginTop: '8px', display: 'block' }}>{link.label}</span>
               </a>
             </div>
           ))}

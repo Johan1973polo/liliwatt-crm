@@ -37,15 +37,15 @@ export default function TeamOnlineStatus() {
   const onlineCount = team.filter((m) => m.isOnline).length;
 
   return (
-    <div className="card mb-4">
-      <div className="card-header bg-white d-flex justify-content-between align-items-center">
-        <h5 className="mb-0">
-          <i className="bi bi-people me-2 text-primary"></i>
-          Mon equipe en ligne
-        </h5>
-        <span className="badge bg-success">{onlineCount} en ligne</span>
+    <div style={{ borderRadius: '14px', overflow: 'hidden', marginBottom: '20px', border: '1px solid #fce7f3' }}>
+      <div style={{ background: '#9d174d', padding: '10px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }}></span>
+          <span style={{ color: 'white', fontSize: '13px', fontWeight: 500 }}>👥 Mon équipe en ligne</span>
+        </div>
+        <span className="badge bg-success" style={{ fontSize: '11px' }}>{onlineCount} en ligne</span>
       </div>
-      <div className="card-body p-0">
+      <div style={{ background: 'white' }}>
         {team.length === 0 ? (
           <div className="text-center py-3 text-muted">
             <i className="bi bi-people"></i> Aucun collegue trouve

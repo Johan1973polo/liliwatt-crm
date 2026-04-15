@@ -44,12 +44,10 @@ export default function VendeurIdentifiants() {
   const pwd = data.zohoPassword || '';
 
   return (
-    <div className="card mb-4">
-      <div className="card-header bg-white">
-        <h5 className="mb-0">
-          <i className="bi bi-key-fill me-2 text-primary"></i>
-          Mes identifiants et accès
-        </h5>
+    <div style={{ borderRadius: '14px', overflow: 'hidden', marginBottom: '20px', border: '1px solid #e0e7ff' }}>
+      <div style={{ background: '#1e40af', padding: '10px 20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }}></span>
+        <span style={{ color: 'white', fontSize: '13px', fontWeight: 500 }}>🔑 Mes identifiants et accès</span>
       </div>
       <div className="card-body p-0">
         <table className="table table-hover mb-0" style={{ fontSize: '13px' }}>
