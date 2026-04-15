@@ -658,5 +658,65 @@
       "correct": 2,
       "explanation": "Annuel (chiffre principal) → Sur 3 ans (projection long terme, impacte le cerveau) → Mensuel (tangible au quotidien). Les 3 pour maximiser l'impact."
     }
+  ],
+  "12": [
+    {
+      "question": "Quelle est la durée totale recommandée pour une session de présentation LILIWATT ?",
+      "type": "QCM",
+      "options": [
+        "30 minutes",
+        "45 minutes + 12 min Q&A",
+        "90 minutes",
+        "2 heures"
+      ],
+      "correct": 1,
+      "explanation": "La session dure environ 48 minutes de présentation + 12 minutes de Q&A, soit 60 minutes au total."
+    },
+    {
+      "question": "Combien de fournisseurs d'électricité existent en France aujourd'hui ?",
+      "type": "QCM",
+      "options": [
+        "12 fournisseurs",
+        "28 fournisseurs",
+        "52+ fournisseurs",
+        "100+ fournisseurs"
+      ],
+      "correct": 2,
+      "explanation": "Il existe plus de 52 fournisseurs d'électricité et 38 de gaz en France. Les alternatifs détiennent 35% du marché élec pro."
+    },
+    {
+      "question": "Il faut forcer le candidat à s'engager à la fin de la session.",
+      "type": "Vrai ou Faux",
+      "options": [
+        "Vrai",
+        "Faux"
+      ],
+      "correct": 1,
+      "explanation": "FAUX — Ne jamais forcer. Proposer un démarrage concret (module 1 dès demain, coaching dans 48h) mais laisser le candidat décider."
+    },
+    {
+      "question": "Un candidat demande : 'C'est pas du MLM ?' Quelle est la bonne réponse ?",
+      "type": "Mise en situation",
+      "options": [
+        "Oui mais c'est légal.",
+        "Non. Vous êtes courtier indépendant, payé par les fournisseurs d'énergie. Le courtage est un métier réglementé.",
+        "C'est un système de parrainage classique.",
+        "On ne parle pas de ça en session."
+      ],
+      "correct": 1,
+      "explanation": "Le courtage en énergie est un métier réglementé. La rémunération vient des fournisseurs, pas du recrutement. Répondre avec transparence."
+    },
+    {
+      "question": "Que faut-il faire dans les 5 minutes après la fin de la session ?",
+      "type": "QCM",
+      "options": [
+        "Rappeler le candidat",
+        "Envoyer le mail d'accès à la formation",
+        "Attendre que le candidat revienne",
+        "Publier une annonce de recrutement"
+      ],
+      "correct": 1,
+      "explanation": "Envoyer le mail d'accès dans les 5 minutes qui suivent et programmer le premier RDV de coaching dans les 48h. Ne pas laisser retomber l'élan."
+    }
   ]
 }
