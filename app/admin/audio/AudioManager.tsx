@@ -18,6 +18,7 @@ export default function AudioManager() {
   const [audios, setAudios] = useState<AudioItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('PROSPECTION');
   const [description, setDescription] = useState('');
@@ -36,26 +37,85 @@ export default function AudioManager() {
   const handleUpload = async () => {
     if (!title.trim() || !file) return;
     setUploading(true);
-    const fd = new FormData();
-    fd.append('title', title.trim());
-    fd.append('category', category);
-    fd.append('description', description.trim());
-    fd.append('file', file);
+    setUploadProgress(0);
 
-    const r = await fetch('/api/admin/audio', { method: 'POST', body: fd });
-    if (r.ok) {
-      setTitle(''); setDescription(''); setFile(null);
+    try {
+      // Étape 1 : préparer l'upload (serveur → Drive resumable URL)
+      const prepRes = await fetch('/api/admin/audio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: title.trim(),
+          category,
+          description: description.trim() || null,
+          filename: file.name,
+          mimeType: file.type || 'audio/mpeg',
+          fileSize: file.size,
+        }),
+      });
+
+      if (!prepRes.ok) {
+        const d = await prepRes.json();
+        throw new Error(d.error || 'Erreur préparation');
+      }
+
+      const { audioId, uploadUrl } = await prepRes.json();
+      setUploadProgress(10);
+
+      // Étape 2 : upload direct navigateur → Google Drive
+      const uploadRes = await new Promise<Response>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', uploadUrl, true);
+        xhr.setRequestHeader('Content-Type', file.type || 'audio/mpeg');
+
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            setUploadProgress(10 + Math.round((e.loaded / e.total) * 80));
+          }
+        };
+
+        xhr.onload = () => {
+          resolve(new Response(xhr.responseText, { status: xhr.status }));
+        };
+        xhr.onerror = () => reject(new Error('Upload réseau échoué'));
+
+        xhr.send(file);
+      });
+
+      if (uploadRes.status < 200 || uploadRes.status >= 300) {
+        throw new Error('Upload Drive échoué: ' + uploadRes.status);
+      }
+
+      // Extraire le fileId de la réponse Drive
+      const driveData = JSON.parse(await uploadRes.text());
+      const driveFileId = driveData.id;
+      setUploadProgress(90);
+
+      // Étape 3 : confirmer (serveur met à jour Prisma + permissions)
+      const confirmRes = await fetch(`/api/admin/audio/${audioId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ driveFileId }),
+      });
+
+      if (!confirmRes.ok) throw new Error('Erreur confirmation');
+
+      setUploadProgress(100);
+      setTitle('');
+      setDescription('');
+      setFile(null);
       if (fileRef.current) fileRef.current.value = '';
       loadAudios();
-    } else {
-      const d = await r.json();
-      alert('Erreur: ' + (d.error || 'Inconnue'));
+    } catch (e: any) {
+      alert('Erreur: ' + e.message);
     }
+
     setUploading(false);
+    setUploadProgress(0);
   };
 
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Supprimer "${title}" ?`)) return;
+  const handleDelete = async (id: string, audioTitle: string) => {
+    if (!confirm(`Supprimer "${audioTitle}" ?`)) return;
     await fetch(`/api/admin/audio/${id}`, { method: 'DELETE' });
     loadAudios();
   };
@@ -121,6 +181,26 @@ export default function AudioManager() {
             </div>
           </div>
 
+          {/* Progress bar */}
+          {uploading && (
+            <div className="mb-3">
+              <div style={{ background: '#e9d5ff', borderRadius: '10px', height: '8px', overflow: 'hidden' }}>
+                <div style={{
+                  background: 'linear-gradient(90deg, #7c3aed, #d946ef)',
+                  height: '100%',
+                  width: `${uploadProgress}%`,
+                  borderRadius: '10px',
+                  transition: 'width 0.3s',
+                }} />
+              </div>
+              <small className="text-muted mt-1 d-block text-center">
+                {uploadProgress < 10 ? 'Préparation...' :
+                 uploadProgress < 90 ? `Upload direct vers Drive... ${uploadProgress}%` :
+                 uploadProgress < 100 ? 'Finalisation...' : 'Terminé !'}
+              </small>
+            </div>
+          )}
+
           <button
             className="btn text-white w-100 py-2"
             style={{ background: '#7c3aed', border: 'none', fontWeight: 600 }}
@@ -146,7 +226,7 @@ export default function AudioManager() {
 }
 
 function AudioSection({ title, items, onDelete, color }: {
-  title: string; items: any[]; onDelete: (id: string, title: string) => void; color: string;
+  title: string; items: AudioItem[]; onDelete: (id: string, title: string) => void; color: string;
 }) {
   return (
     <div className="mb-4">
@@ -166,12 +246,14 @@ function AudioSection({ title, items, onDelete, color }: {
                       <i className="bi bi-mic me-1" style={{ color }}></i>{a.title}
                     </strong>
                     {a.description && <p className="text-muted mb-1" style={{ fontSize: '12px' }}>{a.description}</p>}
-                    <audio
-                      controls
-                      src={`https://drive.google.com/uc?export=download&id=${a.driveFileId}`}
-                      style={{ width: '100%', height: '36px', marginTop: '6px' }}
-                      preload="none"
-                    />
+                    {a.driveFileId && a.driveFileId !== 'PENDING' && (
+                      <audio
+                        controls
+                        src={`https://drive.google.com/uc?export=download&id=${a.driveFileId}`}
+                        style={{ width: '100%', height: '36px', marginTop: '6px' }}
+                        preload="none"
+                      />
+                    )}
                     <small className="text-muted">Ajouté le {new Date(a.createdAt).toLocaleDateString('fr-FR')}</small>
                   </div>
                   <button

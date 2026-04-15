@@ -1,5 +1,4 @@
 import { google } from 'googleapis';
-import { Readable } from 'stream';
 
 const SHARED_DRIVE_ID = '0ACKaJQqRlmwgUk9PVA';
 const AUDIO_FOLDER_NAME = 'AUDIOS FORMATION';
@@ -50,46 +49,78 @@ async function getOrCreateAudioFolder(): Promise<string> {
   return folder.data.id!;
 }
 
-export async function uploadAudioToDrive(
-  buffer: Buffer,
+/**
+ * Crée une session d'upload resumable sur Google Drive.
+ * Retourne l'URL vers laquelle le navigateur enverra le fichier directement.
+ */
+export async function createResumableUpload(
   filename: string,
-  mimeType: string
-): Promise<{ fileId: string; webViewLink: string }> {
-  const drive = getDriveService();
+  mimeType: string,
+  fileSize: number
+): Promise<{ uploadUrl: string; folderId: string }> {
+  const credsBase64 = process.env.GOOGLE_DRIVE_CREDS_BASE64;
+  if (!credsBase64) throw new Error('GOOGLE_DRIVE_CREDS_BASE64 non défini');
+  const creds = JSON.parse(Buffer.from(credsBase64, 'base64').toString());
+
+  // Obtenir un access token
+  const auth = new google.auth.GoogleAuth({
+    credentials: creds,
+    scopes: ['https://www.googleapis.com/auth/drive'],
+  });
+  const accessToken = await auth.getAccessToken();
   const folderId = await getOrCreateAudioFolder();
 
-  const stream = new Readable();
-  stream.push(buffer);
-  stream.push(null);
-
-  const file = await drive.files.create({
-    requestBody: {
-      name: filename,
-      parents: [folderId],
-      driveId: SHARED_DRIVE_ID,
-    },
-    media: {
-      mimeType,
-      body: stream,
-    },
-    supportsAllDrives: true,
-    fields: 'id,webViewLink',
+  // Initier un upload resumable via l'API REST directement
+  const metadata = JSON.stringify({
+    name: filename,
+    parents: [folderId],
+    driveId: SHARED_DRIVE_ID,
   });
 
-  // Rendre accessible en lecture
+  const initRes = await fetch(
+    'https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&supportsAllDrives=true',
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-Upload-Content-Type': mimeType,
+        'X-Upload-Content-Length': String(fileSize),
+      },
+      body: metadata,
+    }
+  );
+
+  if (!initRes.ok) {
+    const err = await initRes.text();
+    throw new Error(`Drive resumable init failed: ${initRes.status} ${err}`);
+  }
+
+  const uploadUrl = initRes.headers.get('location');
+  if (!uploadUrl) throw new Error('No upload URL returned by Drive');
+
+  console.log(`📤 Resumable upload initié: ${filename} (${(fileSize / 1024 / 1024).toFixed(1)} MB)`);
+  return { uploadUrl, folderId };
+}
+
+/**
+ * Après que le client a uploadé vers Drive, on finalise :
+ * rend le fichier public en lecture et retourne les infos.
+ */
+export async function finalizeUpload(
+  fileId: string
+): Promise<{ webViewLink: string }> {
+  const drive = getDriveService();
+
   await drive.permissions.create({
-    fileId: file.data.id!,
+    fileId,
     supportsAllDrives: true,
-    requestBody: {
-      role: 'reader',
-      type: 'anyone',
-    },
+    requestBody: { role: 'reader', type: 'anyone' },
   });
 
-  const webViewLink = `https://drive.google.com/file/d/${file.data.id}/view`;
-  console.log(`🎵 Audio uploadé: ${filename} → ${file.data.id}`);
-
-  return { fileId: file.data.id!, webViewLink };
+  const webViewLink = `https://drive.google.com/file/d/${fileId}/view`;
+  console.log(`✅ Audio finalisé: ${fileId}`);
+  return { webViewLink };
 }
 
 export async function deleteAudioFromDrive(fileId: string): Promise<void> {
