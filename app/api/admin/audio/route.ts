@@ -4,6 +4,9 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { uploadAudioToDrive } from '@/lib/drive';
 
+export const maxDuration = 60;
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== 'ADMIN') {
