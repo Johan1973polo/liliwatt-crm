@@ -65,8 +65,9 @@ export async function POST(request: NextRequest) {
     const { uploadUrl } = await createResumableUpload(filename, mimeType, fileSize);
 
     return NextResponse.json({ audioId: audio.id, uploadUrl });
-  } catch (error) {
-    console.error('Erreur préparation upload:', error);
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+  } catch (error: any) {
+    console.error('AUDIO UPLOAD ERROR:', error);
+    console.error('GOOGLE_DRIVE_CREDS_BASE64 présent:', !!process.env.GOOGLE_DRIVE_CREDS_BASE64);
+    return NextResponse.json({ error: error.message || 'Erreur serveur' }, { status: 500 });
   }
 }
