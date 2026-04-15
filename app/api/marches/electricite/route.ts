@@ -5,7 +5,7 @@ export const revalidate = 300;
 export async function GET() {
   try {
     const res = await fetch(
-      `https://api.energy-charts.info/price?bzn=FR&resolution=daily&start=${fmt(daysAgo(8))}&end=${fmt(new Date())}`,
+      `https://api.energy-charts.info/price?bzn=FR&resolution=daily&start=${fmt(daysAgo(10))}&end=${fmt(new Date())}`,
       { next: { revalidate: 300 } }
     );
     if (res.ok) {
@@ -19,12 +19,13 @@ export async function GET() {
             value: Math.round(cur * 100) / 100,
             change: Math.round((cur - prev) * 100) / 100,
             changePercent: Math.round(((cur - prev) / prev) * 1000) / 10,
+            history: prices.slice(-7).map((p: number) => Math.round(p * 10) / 10),
           });
         }
       }
     }
   } catch {}
-  return NextResponse.json({ value: 87.4, change: -1.2, changePercent: -1.4 });
+  return NextResponse.json({ value: 87.4, change: -1.2, changePercent: -1.4, history: [92, 89, 86, 88, 85, 87, 87] });
 }
 
 function daysAgo(n: number) { const d = new Date(); d.setDate(d.getDate() - n); return d; }
