@@ -1,17 +1,15 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { upload } from '@vercel/blob/client';
 
 interface AudioItem {
   id: string;
   title: string;
   category: string;
   description: string | null;
-  driveFileId: string;
   driveUrl: string;
-  duration: number | null;
   createdAt: string;
-  uploader?: { firstName: string | null; lastName: string | null; email: string };
 }
 
 export default function AudioManager() {
@@ -25,40 +23,56 @@ export default function AudioManager() {
   const [dragOver, setDragOver] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const loadAudios = async () => {
+  const fetchAudios = async () => {
     const r = await fetch('/api/admin/audio');
     if (r.ok) setAudios(await r.json());
     setLoading(false);
   };
 
-  useEffect(() => { loadAudios(); }, []);
+  useEffect(() => { fetchAudios(); }, []);
 
   const handleUpload = async () => {
     if (!title.trim() || !file) return;
     setUploading(true);
 
-    const fd = new FormData();
-    fd.append('title', title.trim());
-    fd.append('category', category);
-    fd.append('description', description.trim());
-    fd.append('file', file);
+    try {
+      // Étape 1 : upload direct navigateur → Vercel Blob (bypass 4.5MB)
+      const blob = await upload(
+        `audios/${Date.now()}-${file.name.replace(/\s/g, '-')}`,
+        file,
+        {
+          access: 'public',
+          handleUploadUrl: '/api/admin/audio',
+        }
+      );
 
-    const r = await fetch('/api/admin/audio', { method: 'POST', body: fd });
-    if (r.ok) {
+      // Étape 2 : sauvegarder les métadonnées en base
+      await fetch('/api/admin/audio', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: title.trim(),
+          category,
+          description: description.trim(),
+          blobUrl: blob.url,
+          blobPathname: blob.pathname,
+        }),
+      });
+
       setTitle(''); setDescription(''); setFile(null);
       if (fileRef.current) fileRef.current.value = '';
-      loadAudios();
-    } else {
-      const d = await r.json();
-      alert('Erreur: ' + (d.error || 'Inconnue'));
+      fetchAudios();
+    } catch (e: any) {
+      alert('Erreur: ' + e.message);
     }
+
     setUploading(false);
   };
 
   const handleDelete = async (id: string, audioTitle: string) => {
     if (!confirm(`Supprimer "${audioTitle}" ?`)) return;
     await fetch(`/api/admin/audio/${id}`, { method: 'DELETE' });
-    loadAudios();
+    fetchAudios();
   };
 
   const prospection = audios.filter(a => a.category === 'PROSPECTION');
@@ -66,7 +80,6 @@ export default function AudioManager() {
 
   return (
     <div>
-      {/* Upload zone */}
       <div className="card mb-4">
         <div className="card-body">
           <div
@@ -80,13 +93,9 @@ export default function AudioManager() {
             onClick={() => fileRef.current?.click()}
             style={{
               border: `2px dashed ${dragOver ? '#7c3aed' : '#d8b4fe'}`,
-              borderRadius: '12px',
-              padding: '32px',
-              textAlign: 'center',
-              cursor: 'pointer',
-              background: dragOver ? '#f5f3ff' : '#faf5ff',
-              transition: 'all .2s',
-              marginBottom: '16px',
+              borderRadius: '12px', padding: '32px', textAlign: 'center',
+              cursor: 'pointer', background: dragOver ? '#f5f3ff' : '#faf5ff',
+              transition: 'all .2s', marginBottom: '16px',
             }}
           >
             {file ? (
@@ -98,7 +107,7 @@ export default function AudioManager() {
                 <p style={{ color: '#7c3aed', fontWeight: 700, fontSize: '16px', margin: '0 0 6px' }}>
                   <i className="bi bi-mic me-2"></i>Glissez votre fichier audio ici
                 </p>
-                <p style={{ color: '#9ca3af', fontSize: '13px', margin: 0 }}>MP3, WAV, M4A — max 500 MB</p>
+                <p style={{ color: '#9ca3af', fontSize: '13px', margin: 0 }}>MP3, WAV, M4A — max 100 MB</p>
               </>
             )}
           </div>
@@ -133,7 +142,6 @@ export default function AudioManager() {
         </div>
       </div>
 
-      {/* Lists */}
       {loading ? (
         <div className="text-center py-4"><div className="spinner-border text-primary"></div></div>
       ) : (
@@ -167,20 +175,11 @@ function AudioSection({ title, items, onDelete, color }: {
                       <i className="bi bi-mic me-1" style={{ color }}></i>{a.title}
                     </strong>
                     {a.description && <p className="text-muted mb-1" style={{ fontSize: '12px' }}>{a.description}</p>}
-                    <audio
-                      controls
-                      src={a.driveUrl}
-                      style={{ width: '100%', height: '36px', marginTop: '6px' }}
-                      preload="none"
-                    />
+                    <audio controls src={a.driveUrl} style={{ width: '100%', height: '36px', marginTop: '6px' }} preload="none" />
                     <small className="text-muted">Ajouté le {new Date(a.createdAt).toLocaleDateString('fr-FR')}</small>
                   </div>
-                  <button
-                    className="btn btn-sm ms-2"
-                    style={{ background: '#fef2f2', color: '#dc2626', border: 'none' }}
-                    onClick={() => onDelete(a.id, a.title)}
-                    title="Supprimer"
-                  >
+                  <button className="btn btn-sm ms-2" style={{ background: '#fef2f2', color: '#dc2626', border: 'none' }}
+                    onClick={() => onDelete(a.id, a.title)} title="Supprimer">
                     <i className="bi bi-trash"></i>
                   </button>
                 </div>

@@ -1,59 +1,77 @@
-import { put } from '@vercel/blob';
+import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
-export const maxDuration = 60;
-
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
 
+  const body = (await request.json()) as HandleUploadBody;
+
   try {
-    const formData = await req.formData();
-    const file = formData.get('file') as File;
-    const title = formData.get('title') as string;
-    const category = formData.get('category') as string;
-    const description = (formData.get('description') as string) || '';
-
-    if (!file || !title || !category) {
-      return NextResponse.json({ error: 'Champs manquants' }, { status: 400 });
-    }
-
-    // Upload vers Vercel Blob
-    const blob = await put(
-      `audios/${Date.now()}-${file.name.replace(/\s/g, '-')}`,
-      file,
-      { access: 'public' }
-    );
-
-    // Sauvegarde en base
-    const audio = await prisma.audioFile.create({
-      data: {
-        title,
-        category,
-        description,
-        driveFileId: blob.pathname,
-        driveUrl: blob.url,
-        uploadedBy: session.user.id,
+    const jsonResponse = await handleUpload({
+      body,
+      request,
+      onBeforeGenerateToken: async (pathname) => ({
+        allowedContentTypes: ['audio/mpeg', 'audio/wav', 'audio/mp4', 'audio/x-m4a', 'audio/ogg', 'audio/aac'],
+        maximumSizeInBytes: 100 * 1024 * 1024,
+        tokenPayload: JSON.stringify({
+          userId: session.user.id,
+        }),
+      }),
+      onUploadCompleted: async ({ blob, tokenPayload }) => {
+        console.log('🎵 Blob upload completed:', blob.url);
+        // Note: onUploadCompleted est appelé par Vercel en webhook,
+        // la session n'est plus disponible ici. On utilise tokenPayload.
+        try {
+          const payload = JSON.parse(tokenPayload || '{}');
+          // L'enregistrement Prisma sera créé côté client après l'upload
+          console.log('✅ Upload finalisé pour userId:', payload.userId);
+        } catch (e) {
+          console.error('onUploadCompleted error:', e);
+        }
       },
     });
-
-    console.log(`🎵 Audio uploadé: ${file.name} → ${blob.url}`);
-    return NextResponse.json({ success: true, audio });
+    return NextResponse.json(jsonResponse);
   } catch (error: any) {
     console.error('AUDIO UPLOAD ERROR:', error);
-    return NextResponse.json(
-      { error: error.message || 'Erreur serveur' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }
 
-export async function GET(req: NextRequest) {
+// Route séparée pour sauvegarder les métadonnées après upload client
+export async function PUT(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== 'ADMIN') {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+  }
+
+  const { title, category, description, blobUrl, blobPathname } = await request.json();
+
+  if (!title || !category || !blobUrl) {
+    return NextResponse.json({ error: 'Champs manquants' }, { status: 400 });
+  }
+
+  const audio = await prisma.audioFile.create({
+    data: {
+      title,
+      category,
+      description: description || '',
+      driveFileId: blobPathname || blobUrl,
+      driveUrl: blobUrl,
+      uploadedBy: session.user.id,
+    },
+  });
+
+  console.log(`✅ Audio enregistré: ${title} → ${blobUrl}`);
+  return NextResponse.json({ success: true, audio });
+}
+
+export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
