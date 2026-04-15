@@ -45,6 +45,7 @@ model User {
   unlockedTrainings      TrainingProgress[] @relation("UnlockedBy")
   declarations           Declaration[]
   quizResults            QuizResult[]
+  audioFiles             AudioFile[]
 
   @@index([email])
   @@index([referentId])
@@ -327,6 +328,24 @@ model QuizResult {
 
   @@index([userId])
   @@index([moduleId])
+}
+
+model AudioFile {
+  id          String   @id @default(cuid())
+  title       String
+  category    String   // PROSPECTION | CLOSING
+  description String?
+  driveFileId String
+  driveUrl    String
+  duration    Int?     // durée en secondes
+  uploadedBy  String
+  createdAt   DateTime @default(now())
+
+  // Relations
+  uploader    User     @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
+
+  @@index([category])
+  @@index([createdAt])
 }
 
 model Declaration {

@@ -61,6 +61,7 @@ export default function Navbar({
           items: [
             { href: '/formation', label: 'Ma Formation', icon: 'bi-book' },
             { href: '/formation/gestion', label: 'Gestion Formation', icon: 'bi-gear' },
+            { href: '/admin/audio', label: 'Débriefing Audio', icon: 'bi-mic' },
           ],
         },
         {

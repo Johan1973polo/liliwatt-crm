@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Navbar from '@/components/Navbar';
 import ModuleCard from './ModuleCard';
+import FormationTabs from './FormationTabs';
 
 export const revalidate = 0;
 
@@ -130,58 +131,61 @@ export default async function FormationPage() {
           </div>
         </div>
 
-        {/* Légende des statuts */}
-        <div className="card mb-4">
-          <div className="card-body py-3">
-            <div className="row text-center g-3">
-              <div className="col-md-3">
-                <span className="badge bg-secondary">
-                  <i className="bi bi-lock-fill me-1"></i>
-                  Verrouillé
-                </span>
-              </div>
-              <div className="col-md-3">
-                <span className="badge bg-success">
-                  <i className="bi bi-unlock-fill me-1"></i>
-                  Déverrouillé
-                </span>
-              </div>
-              <div className="col-md-3">
-                <span className="badge bg-warning text-dark">
-                  <i className="bi bi-hourglass-split me-1"></i>
-                  En cours
-                </span>
-              </div>
-              <div className="col-md-3">
-                <span className="badge bg-primary">
-                  <i className="bi bi-check-circle-fill me-1"></i>
-                  Complété
-                </span>
+        {/* Onglets Modules / Débriefing */}
+        <FormationTabs>
+          {/* Légende des statuts */}
+          <div className="card mb-4">
+            <div className="card-body py-3">
+              <div className="row text-center g-3">
+                <div className="col-md-3">
+                  <span className="badge bg-secondary">
+                    <i className="bi bi-lock-fill me-1"></i>
+                    Verrouillé
+                  </span>
+                </div>
+                <div className="col-md-3">
+                  <span className="badge bg-success">
+                    <i className="bi bi-unlock-fill me-1"></i>
+                    Déverrouillé
+                  </span>
+                </div>
+                <div className="col-md-3">
+                  <span className="badge bg-warning text-dark">
+                    <i className="bi bi-hourglass-split me-1"></i>
+                    En cours
+                  </span>
+                </div>
+                <div className="col-md-3">
+                  <span className="badge bg-primary">
+                    <i className="bi bi-check-circle-fill me-1"></i>
+                    Complété
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Liste des modules */}
-        <div className="row g-4">
-          {modulesWithProgress.map(module => (
-            <div key={module.id} className="col-md-6 col-lg-4">
-              <ModuleCard module={module} />
-            </div>
-          ))}
-        </div>
-
-        {/* Message d'aide */}
-        {completedCount === 0 && (
-          <div className="alert alert-info mt-4">
-            <i className="bi bi-info-circle me-2"></i>
-            <strong>Bienvenue dans votre espace de formation !</strong>
-            <p className="mb-0 mt-2">
-              Votre référent déverrouillera progressivement les modules pour vous.
-              Une fois déverrouillés, vous pourrez commencer votre apprentissage.
-            </p>
+          {/* Liste des modules */}
+          <div className="row g-4">
+            {modulesWithProgress.map(module => (
+              <div key={module.id} className="col-md-6 col-lg-4">
+                <ModuleCard module={module} />
+              </div>
+            ))}
           </div>
-        )}
+
+          {/* Message d'aide */}
+          {completedCount === 0 && (
+            <div className="alert alert-info mt-4">
+              <i className="bi bi-info-circle me-2"></i>
+              <strong>Bienvenue dans votre espace de formation !</strong>
+              <p className="mb-0 mt-2">
+                Votre référent déverrouillera progressivement les modules pour vous.
+                Une fois déverrouillés, vous pourrez commencer votre apprentissage.
+              </p>
+            </div>
+          )}
+        </FormationTabs>
       </div>
     </>
   );
