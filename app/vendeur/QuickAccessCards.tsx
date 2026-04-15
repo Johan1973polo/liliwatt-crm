@@ -1,34 +1,10 @@
 'use client';
 
 const quickLinks = [
-  {
-    icon: 'bi-clipboard2-data',
-    label: 'Courtier Énergie',
-    url: 'https://liliwatt-courtier.onrender.com',
-    color: '#7c3aed',
-    emoji: '📋',
-  },
-  {
-    icon: 'bi-gem',
-    label: 'Prospection',
-    url: 'https://liliwatt-prospection.onrender.com',
-    color: '#d946ef',
-    emoji: '💎',
-  },
-  {
-    icon: 'bi-envelope-at',
-    label: 'Zoho Mail',
-    url: 'https://mail.zoho.eu',
-    color: '#3b82f6',
-    emoji: '📧',
-  },
-  {
-    icon: 'bi-camera-video',
-    label: 'Google Meet',
-    url: 'https://meet.google.com/tzv-pgjc-und',
-    color: '#10b981',
-    emoji: '📅',
-  },
+  { label: 'Courtier Énergie', url: 'https://liliwatt-courtier.onrender.com', color: '#7c3aed', emoji: '📋' },
+  { label: 'Prospection', url: 'https://liliwatt-prospection.onrender.com', color: '#d946ef', emoji: '💎' },
+  { label: 'Zoho Mail', url: 'https://mail.zoho.eu', color: '#2563eb', emoji: '📧' },
+  { label: 'Google Meet', url: 'https://meet.google.com/tzv-pgjc-und', color: '#16a34a', emoji: '📅' },
 ];
 
 export default function QuickAccessCards() {
@@ -48,15 +24,21 @@ export default function QuickAccessCards() {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="card card-vendor text-decoration-none h-100"
-                style={{ borderTop: `3px solid ${link.color}` }}
+                className="d-block text-decoration-none h-100"
+                style={{
+                  background: link.color,
+                  borderRadius: '12px',
+                  padding: '20px 12px',
+                  textAlign: 'center',
+                  transition: 'filter 0.2s',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.filter = 'brightness(0.85)'; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.filter = 'none'; }}
               >
-                <div className="card-body text-center py-3">
-                  <span style={{ fontSize: '2rem' }}>{link.emoji}</span>
-                  <h6 className="mt-2 mb-0" style={{ color: link.color, fontSize: '0.9rem' }}>
-                    {link.label}
-                  </h6>
-                </div>
+                <span style={{ fontSize: '2rem', display: 'block' }}>{link.emoji}</span>
+                <span style={{ color: 'white', fontWeight: 600, fontSize: '0.9rem', marginTop: '8px', display: 'block' }}>
+                  {link.label}
+                </span>
               </a>
             </div>
           ))}
