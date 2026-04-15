@@ -7,6 +7,7 @@ import VendeursTableau from './VendeursTableau';
 import VendeurIdentifiants from '../vendeur/VendeurIdentifiants';
 import LinksBlock from '../vendeur/LinksBlock';
 import QuickAccessCards from '../vendeur/QuickAccessCards';
+import MarchesEnergie from '@/components/MarchesEnergie';
 import AutoRefresh from '@/components/AutoRefresh';
 
 export const revalidate = 0;
@@ -78,6 +79,8 @@ export default async function ReferentPage() {
       <div className="container-fluid py-4">
         {/* Accès rapides */}
         <QuickAccessCards />
+
+        <MarchesEnergie />
 
         {/* Section Liens et Identifiants */}
         <div className="row mb-4">
