@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 // --- TradingView Widget (Brent + Gaz) ---
 const tvWidgets = [
   { symbol: 'TVC:UKOIL', label: '🛢 Brent Crude' },
-  { symbol: 'NYMEX:NG1!', label: '🔥 Gaz Naturel' },
 ];
 
 function TradingViewWidget({ symbol, label }: { symbol: string; label: string }) {
@@ -103,6 +102,7 @@ export default function MarchesEnergie() {
         {tvWidgets.map((w) => (
           <TradingViewWidget key={w.symbol} symbol={w.symbol} label={w.label} />
         ))}
+        <StaticCard emoji="🔥" label="Gaz TTF" badge="TTF Europe" unit="€/MWh" endpoint="/api/marches/gaz" />
         <StaticCard emoji="⚡" label="Spot France" badge="EPEX J-1" unit="€/MWh" endpoint="/api/marches/electricite" />
         <StaticCard emoji="🌱" label="Carbone EU" badge="EU ETS" unit="€/tCO₂" endpoint="/api/marches/carbone" />
       </div>
