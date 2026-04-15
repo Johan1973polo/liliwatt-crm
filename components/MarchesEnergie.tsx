@@ -109,9 +109,9 @@ function InfoPanel() {
       <button
         onClick={() => setOpen(!open)}
         style={{
-          display: 'block', width: '100%', background: 'rgba(124,58,237,0.08)',
+          display: 'block', width: '100%', background: 'rgba(124,58,237,0.1)',
           border: '1px solid rgba(124,58,237,0.3)', borderRadius: '8px',
-          padding: '10px 16px', color: 'rgba(255,255,255,0.7)', fontSize: '12px',
+          padding: '10px 16px', color: '#ffffff', fontSize: '12px',
           cursor: 'pointer', textAlign: 'center', transition: 'background 0.2s',
         }}
         onMouseEnter={e => { (e.target as HTMLElement).style.background = 'rgba(124,58,237,0.15)'; }}
@@ -193,10 +193,12 @@ function InfoCard({ title, badge, badgeColor, text, action }: {
 // --- Main ---
 export default function MarchesEnergie() {
   return (
-    <div style={{ background: '#1e1b4b', borderRadius: '16px', padding: '20px', marginBottom: '20px' }}>
-      <h5 style={{ color: 'white', fontWeight: 700, fontSize: '14px', margin: '0 0 16px' }}>
-        📊 Marchés Énergie
-      </h5>
+    <div style={{ borderRadius: '14px', overflow: 'hidden', marginBottom: '20px', border: '1px solid #e9d5ff' }}>
+      <div style={{ background: '#1e1b4b', padding: '10px 20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }}></span>
+        <span style={{ color: 'white', fontSize: '13px', fontWeight: 500 }}>📊 Marchés Énergie</span>
+      </div>
+      <div style={{ background: 'white', padding: '16px 20px' }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
         <TradingViewWidget symbol="TVC:UKOIL" label="🛢 Brent Crude" />
         <StaticCard emoji="🔥" label="Gaz TTF" badge="TTF Europe" unit="€/MWh" endpoint="/api/marches/gaz" />
@@ -204,6 +206,7 @@ export default function MarchesEnergie() {
         <StaticCard emoji="🌱" label="Carbone EU" badge="EU ETS" unit="€/tCO₂" endpoint="/api/marches/carbone" />
       </div>
       <InfoPanel />
+      </div>
     </div>
   );
 }
