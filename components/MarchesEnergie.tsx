@@ -12,6 +12,7 @@ interface MarketData {
 
 const DEFAULTS: Record<string, MarketData> = {
   electricite: { value: 58.2, change: -1.3, changePercent: -2.2, history: [62, 60, 58, 61, 59, 57, 58], delayed: true },
+  gaz: { value: 34.2, change: -0.5, changePercent: -1.4, history: [36, 35, 34, 35, 33, 34, 34], delayed: true },
   brent: { value: 72.4, change: -0.8, changePercent: -1.1, history: [74, 73, 72, 73, 71, 72, 72], delayed: true },
   carbone: { value: 68.5, change: 0.7, changePercent: 1.0, history: [65, 66, 67, 67, 68, 69, 68], delayed: true },
 };
@@ -105,16 +106,19 @@ function MarketCard({
 
 export default function MarchesEnergie() {
   const [elec, setElec] = useState<MarketData>(DEFAULTS.electricite);
+  const [gaz, setGaz] = useState<MarketData>(DEFAULTS.gaz);
   const [brent, setBrent] = useState<MarketData>(DEFAULTS.brent);
   const [carbone, setCarbone] = useState<MarketData>(DEFAULTS.carbone);
 
   const fetchAll = async () => {
-    const [e, b, c] = await Promise.allSettled([
+    const [e, g, b, c] = await Promise.allSettled([
       fetch('/api/marches/electricite').then(r => r.json()),
+      fetch('/api/marches/gaz').then(r => r.json()),
       fetch('/api/marches/brent').then(r => r.json()),
       fetch('/api/marches/carbone').then(r => r.json()),
     ]);
     if (e.status === 'fulfilled' && e.value.value) setElec(e.value);
+    if (g.status === 'fulfilled' && g.value.value) setGaz(g.value);
     if (b.status === 'fulfilled' && b.value.value) setBrent(b.value);
     if (c.status === 'fulfilled' && c.value.value) setCarbone(c.value);
   };
@@ -140,10 +144,11 @@ export default function MarchesEnergie() {
           Actualisation 60s
         </span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
         <MarketCard emoji="⚡" title="Élec Spot FR" badge="EPEX SPOT" unit="€/MWh" data={elec} />
+        <MarketCard emoji="🔥" title="Gaz TTF" badge="TTF FUTURES" unit="€/MWh" data={gaz} />
         <MarketCard emoji="🛢" title="Pétrole Brent" badge="BRENT CRUDE" unit="$/baril" data={brent} />
-        <MarketCard emoji="🌱" title="Carbone EU" badge="EU ETS" unit="€/tonne CO₂" data={carbone} />
+        <MarketCard emoji="🌱" title="Carbone EU" badge="EU ETS" unit="€/tCO₂" data={carbone} />
       </div>
     </div>
   );
