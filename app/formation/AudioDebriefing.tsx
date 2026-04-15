@@ -58,7 +58,7 @@ function AudioSection({ title, subtitle, items, color }: {
                 {a.description && <p className="text-muted mb-1" style={{ fontSize: '12px' }}>{a.description}</p>}
                 <audio
                   controls
-                  src={`https://drive.google.com/uc?export=download&id=${a.driveFileId}`}
+                  src={a.driveUrl}
                   style={{ width: '100%', height: '36px', marginTop: '6px' }}
                   preload="none"
                 />
