@@ -12,6 +12,7 @@ import QuickAccessCards from './QuickAccessCards';
 import VendeurIdentifiants from './VendeurIdentifiants';
 import DeclarationButtons from './DeclarationButtons';
 import TeamOnlineStatus from './TeamOnlineStatus';
+import MarchesEnergie from '@/components/MarchesEnergie';
 
 // Désactiver le cache pour cette page
 export const revalidate = 0;
@@ -118,6 +119,9 @@ export default async function VendeurPage() {
 
         {/* Accès rapides */}
         <QuickAccessCards />
+
+        {/* Marchés Énergie */}
+        <MarchesEnergie />
 
         {/* Annonces à l'équipe */}
         <DeclarationButtons />
