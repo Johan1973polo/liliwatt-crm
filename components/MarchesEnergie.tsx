@@ -3,8 +3,8 @@
 import { useEffect, useRef } from 'react';
 
 const widgets = [
-  { symbol: 'EPEXSPOT:FR_BASE', label: '⚡ Spot France', id: 'tv_elec' },
-  { symbol: 'TVC:NATGASEUR', label: '🔥 Gaz TTF', id: 'tv_gaz' },
+  { symbol: 'ICEEUR:EBM1!', label: '⚡ Élec Baseload EU', id: 'tv_elec' },
+  { symbol: 'ICEEUR:TTF1!', label: '🔥 Gaz TTF', id: 'tv_gaz' },
   { symbol: 'TVC:UKOIL', label: '🛢 Brent Crude', id: 'tv_brent' },
   { symbol: 'ICEEUR:EUA1!', label: '🌱 Carbone ETS', id: 'tv_carbone' },
 ];
