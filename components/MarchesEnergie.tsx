@@ -109,13 +109,13 @@ function InfoPanel() {
       <button
         onClick={() => setOpen(!open)}
         style={{
-          display: 'block', width: '100%', background: '#0f0c29',
+          display: 'block', width: '100%', background: '#1e1b4b',
           border: '1px solid rgba(124,58,237,0.3)', borderRadius: '8px',
           padding: '10px 16px', color: 'rgba(255,255,255,0.6)', fontSize: '12px',
           cursor: 'pointer', textAlign: 'center', transition: 'background 0.2s',
         }}
-        onMouseEnter={e => { (e.target as HTMLElement).style.background = 'rgba(124,58,237,0.15)'; }}
-        onMouseLeave={e => { (e.target as HTMLElement).style.background = 'rgba(124,58,237,0.08)'; }}
+        onMouseEnter={e => { (e.target as HTMLElement).style.background = '#2e2860'; }}
+        onMouseLeave={e => { (e.target as HTMLElement).style.background = '#1e1b4b'; }}
       >
         ℹ️ Pourquoi ces chiffres comptent pour vos appels ?
         <span style={{ display: 'inline-block', marginLeft: '6px', transition: 'transform 0.3s', transform: open ? 'rotate(180deg)' : 'rotate(0)' }}>▼</span>
