@@ -55,6 +55,24 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Résoudre courtierNumber unique
+    let finalCourtierNumber: number | undefined;
+    if (courtierNumber) {
+      const num = parseInt(courtierNumber);
+      const existing = await prisma.user.findUnique({ where: { courtierNumber: num } });
+      if (existing) {
+        // Numéro pris → trouver le max + 1
+        const maxUser = await prisma.user.findFirst({
+          where: { courtierNumber: { not: null } },
+          orderBy: { courtierNumber: 'desc' },
+        });
+        finalCourtierNumber = (maxUser?.courtierNumber || 0) + 1;
+        console.log(`⚠️ courtierNumber ${num} pris → attribué ${finalCourtierNumber}`);
+      } else {
+        finalCourtierNumber = num;
+      }
+    }
+
     // Créer l'utilisateur
     const passwordHash = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
@@ -66,7 +84,7 @@ export async function POST(request: NextRequest) {
         passwordHash,
         role: role.toUpperCase(),
         referentId,
-        courtierNumber: courtierNumber ? parseInt(courtierNumber) : undefined,
+        courtierNumber: finalCourtierNumber,
         isActive: true,
       },
     });
