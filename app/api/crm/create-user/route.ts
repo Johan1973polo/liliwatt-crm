@@ -100,8 +100,10 @@ export async function POST(request: NextRequest) {
       userId: user.id,
       email: user.email,
     });
-  } catch (error) {
-    console.error('Erreur création utilisateur CRM:', error);
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+  } catch (error: any) {
+    console.error('CREATE USER ERROR:', error);
+    console.error('ERROR MESSAGE:', error.message);
+    console.error('ERROR CODE:', error.code);
+    return NextResponse.json({ error: error.message || 'Erreur serveur' }, { status: 500 });
   }
 }
