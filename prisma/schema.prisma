@@ -24,6 +24,7 @@ model User {
   courtierNumber  Int?     @unique // Numéro unique du courtier (ex: 47, 48, 49...)
   createdAt       DateTime @default(now())
   isActive        Boolean  @default(true)
+  deletedAt       DateTime?
   isAvailable     Boolean? // Statut de disponibilité du vendeur: null = aucune action, true = disponible, false = non disponible
   lastSeen        DateTime? // Dernière activité (pour statut en ligne)
 
