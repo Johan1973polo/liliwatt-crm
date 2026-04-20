@@ -45,13 +45,13 @@ export default async function ModuleDetailPage({ params }: { params: { id: strin
     },
   });
 
-  // SÉCURITÉ: Si VENDEUR et module LOCKED, rediriger
-  if (session.user.role === 'VENDEUR' && (!progress || progress.status === 'LOCKED')) {
+  // SÉCURITÉ: Si VENDEUR/REFERENT et module LOCKED, rediriger
+  if (['VENDEUR', 'REFERENT'].includes(session.user.role) && (!progress || progress.status === 'LOCKED')) {
     redirect('/formation?error=locked');
   }
 
-  // Si le statut est UNLOCKED et que c'est un VENDEUR, passer automatiquement à IN_PROGRESS
-  if (session.user.role === 'VENDEUR' && progress && progress.status === 'UNLOCKED') {
+  // Si le statut est UNLOCKED, passer automatiquement à IN_PROGRESS
+  if (['VENDEUR', 'REFERENT'].includes(session.user.role) && progress && progress.status === 'UNLOCKED') {
     await prisma.trainingProgress.update({
       where: { id: progress.id },
       data: {

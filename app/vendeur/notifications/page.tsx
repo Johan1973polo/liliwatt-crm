@@ -8,7 +8,7 @@ import NotificationsList from '@/app/admin/notifications/NotificationsList';
 export default async function VendeurNotificationsPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || session.user.role !== 'VENDEUR') {
+  if (!session || !['VENDEUR', 'REFERENT'].includes(session.user.role)) {
     redirect('/auth/signin');
   }
 

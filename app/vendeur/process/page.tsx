@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar';
 export default async function VendeurProcessPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || session.user.role !== 'VENDEUR') {
+  if (!session || !['VENDEUR', 'REFERENT'].includes(session.user.role)) {
     redirect('/auth/signin');
   }
 

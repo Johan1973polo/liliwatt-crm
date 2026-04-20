@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       data: {
         type: 'SALE',
         courtierNumber: vendeur?.courtierNumber || null,
-        authorRole: 'VENDEUR',
+        authorRole: session.user.role,
         authorName: `${vendeur?.firstName || ''} ${vendeur?.lastName || ''}`.trim(),
         message: `vient de signer ${societe} chez ${fournisseur} (${segment || 'C5'}) !`,
       },

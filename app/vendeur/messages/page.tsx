@@ -8,7 +8,7 @@ import MessagesInterface from './MessagesInterface';
 export default async function VendeurMessagesPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || session.user.role !== 'VENDEUR') {
+  if (!session || !['VENDEUR', 'REFERENT'].includes(session.user.role)) {
     redirect('/auth/signin');
   }
 

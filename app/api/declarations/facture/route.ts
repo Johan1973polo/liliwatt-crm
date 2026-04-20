@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       data: {
         type: 'INVOICE',
         courtierNumber: vendeur?.courtierNumber || null,
-        authorRole: 'VENDEUR',
+        authorRole: session.user.role,
         authorName: `${vendeur?.firstName || ''} ${vendeur?.lastName || ''}`.trim(),
         message: `a récupéré une facture ${typeLabel} de ${societe}`,
       },
