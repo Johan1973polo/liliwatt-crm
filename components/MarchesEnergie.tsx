@@ -160,9 +160,9 @@ function InfoPanel() {
         </div>
 
         <div style={{
-          background: 'rgba(124,58,237,0.1)', borderRadius: '10px', padding: '16px', marginTop: '14px', textAlign: 'center',
+          background: '#1e1b4b', borderRadius: '10px', padding: '16px 20px', marginTop: '14px', textAlign: 'center',
         }}>
-          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '12px', fontStyle: 'italic', lineHeight: 1.7, margin: 0 }}>
+          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', fontStyle: 'italic', lineHeight: 1.7, margin: 0 }}>
             Un opérateur de marché LILIWATT ne dit pas &laquo;&nbsp;je vends de l&apos;énergie&nbsp;&raquo;.<br />
             Il dit &laquo;&nbsp;je surveille les marchés pour vous <span style={{ color: '#d946ef', fontWeight: 600 }}>protéger des hausses à venir</span>&nbsp;&raquo;.<br />
             C&apos;est cette posture qui transforme un appel en rendez-vous.
