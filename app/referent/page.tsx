@@ -8,6 +8,7 @@ import VendeurIdentifiants from '../vendeur/VendeurIdentifiants';
 import LinksBlock from '../vendeur/LinksBlock';
 import QuickAccessCards from '../vendeur/QuickAccessCards';
 import MarchesEnergie from '@/components/MarchesEnergie';
+import DeclarationButtons from '../vendeur/DeclarationButtons';
 import AutoRefresh from '@/components/AutoRefresh';
 
 export const revalidate = 0;
@@ -81,6 +82,9 @@ export default async function ReferentPage() {
         <QuickAccessCards />
 
         <MarchesEnergie />
+
+        {/* Annonces à l'équipe */}
+        <DeclarationButtons />
 
         {/* Section Liens et Identifiants */}
         <div className="row mb-4">
