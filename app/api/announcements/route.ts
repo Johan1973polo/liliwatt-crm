@@ -6,7 +6,7 @@ import { prisma } from '@/lib/prisma';
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
 
-  if (!session || session.user.role !== 'VENDEUR') {
+  if (!session || !['VENDEUR', 'REFERENT'].includes(session.user.role)) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
   }
 
