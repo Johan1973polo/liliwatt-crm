@@ -9,32 +9,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
   }
 
-  const body = await request.json();
-  const { societe, type, notes } = body;
-
-  if (!societe) {
-    return NextResponse.json({ error: 'Nom de société requis' }, { status: 400 });
-  }
-
   try {
-    // Créer la déclaration
     const declaration = await prisma.declaration.create({
       data: {
         type: 'FACTURE',
         userId: session.user.id,
-        societe,
-        details: { energyType: type || 'electricite', notes: notes || '' },
+        societe: 'Facture récupérée',
+        details: {},
       },
     });
 
-    // Récupérer le vendeur pour son nom
     const vendeur = await prisma.user.findUnique({
       where: { id: session.user.id },
       select: { firstName: true, lastName: true, referentId: true, courtierNumber: true },
     });
 
     const prenom = vendeur?.firstName || session.user.email;
-    const typeLabel = type === 'gaz' ? 'gaz' : 'électricité';
 
     // Notifier le référent
     if (vendeur?.referentId) {
@@ -43,16 +33,12 @@ export async function POST(request: NextRequest) {
           userId: vendeur.referentId,
           kind: 'INVOICE_RECEIVED',
           entityId: declaration.id,
-          metadata: JSON.stringify({
-            message: `📄 ${prenom} a récupéré une facture ${typeLabel} de ${societe}`,
-            vendeurName: prenom,
-            societe,
-          }),
+          metadata: JSON.stringify({ message: `📄 ${prenom} a récupéré une facture !`, vendeurName: prenom }),
         },
       });
     }
 
-    // Notifier tous les admins
+    // Notifier les admins
     const admins = await prisma.user.findMany({ where: { role: 'ADMIN' } });
     for (const admin of admins) {
       await prisma.notification.create({
@@ -60,23 +46,19 @@ export async function POST(request: NextRequest) {
           userId: admin.id,
           kind: 'INVOICE_RECEIVED',
           entityId: declaration.id,
-          metadata: JSON.stringify({
-            message: `📄 ${prenom} a récupéré une facture ${typeLabel} de ${societe}`,
-            vendeurName: prenom,
-            societe,
-          }),
+          metadata: JSON.stringify({ message: `📄 ${prenom} a récupéré une facture !`, vendeurName: prenom }),
         },
       });
     }
 
-    // Créer une activité d'équipe
+    // Activité d'équipe
     await prisma.teamActivity.create({
       data: {
         type: 'INVOICE',
         courtierNumber: vendeur?.courtierNumber || null,
         authorRole: session.user.role,
         authorName: `${vendeur?.firstName || ''} ${vendeur?.lastName || ''}`.trim(),
-        message: `a récupéré une facture ${typeLabel} de ${societe}`,
+        message: `a récupéré une facture !`,
       },
     });
 

@@ -10,10 +10,10 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { societe, fournisseur, segment } = body;
+  const { montant_commission } = body;
 
-  if (!societe || !fournisseur) {
-    return NextResponse.json({ error: 'Société et fournisseur requis' }, { status: 400 });
+  if (!montant_commission || montant_commission <= 0) {
+    return NextResponse.json({ error: 'Montant commission requis' }, { status: 400 });
   }
 
   try {
@@ -21,8 +21,8 @@ export async function POST(request: NextRequest) {
       data: {
         type: 'VENTE',
         userId: session.user.id,
-        societe,
-        details: { fournisseur, segment: segment || 'C5' },
+        societe: 'Vente signée',
+        details: { montant_commission },
       },
     });
 
@@ -32,8 +32,9 @@ export async function POST(request: NextRequest) {
     });
 
     const prenom = vendeur?.firstName || session.user.email;
+    const montantStr = Number(montant_commission).toFixed(0);
 
-    // Notifier TOUTE l'équipe (admins + référents + vendeurs)
+    // Notifier TOUTE l'équipe
     const allUsers = await prisma.user.findMany({
       where: { isActive: true, id: { not: session.user.id } },
       select: { id: true },
@@ -46,23 +47,23 @@ export async function POST(request: NextRequest) {
           kind: 'SALE_MADE',
           entityId: declaration.id,
           metadata: JSON.stringify({
-            message: `🏆 ${prenom} vient de signer ${societe} !`,
+            message: `🏆 ${prenom} a signé un client ! Commission : ${montantStr}€`,
             vendeurName: prenom,
-            societe,
-            fournisseur,
+            montant: montant_commission,
           }),
         },
       });
     }
 
-    // Créer une activité d'équipe
+    // Activité d'équipe
     await prisma.teamActivity.create({
       data: {
         type: 'SALE',
+        amount: Math.round(montant_commission),
         courtierNumber: vendeur?.courtierNumber || null,
         authorRole: session.user.role,
         authorName: `${vendeur?.firstName || ''} ${vendeur?.lastName || ''}`.trim(),
-        message: `vient de signer ${societe} chez ${fournisseur} (${segment || 'C5'}) !`,
+        message: `a signé un client ! Commission : ${montantStr}€ 🏆`,
       },
     });
 
