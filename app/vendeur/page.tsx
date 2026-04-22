@@ -5,7 +5,6 @@ import { prisma } from '@/lib/prisma';
 import Navbar from '@/components/Navbar';
 import AutoRefresh from '@/components/AutoRefresh';
 import ChallengeAlert from './ChallengeAlert';
-import MessageBlock from './MessageBlock';
 import DemandesBlock from './DemandesBlock';
 import TeamActivityFeed from './TeamActivityFeed';
 import QuickAccessCards from './QuickAccessCards';
@@ -26,16 +25,6 @@ export default async function VendeurPage() {
   }
 
   const userId = session.user.id;
-  const referentId = session.user.referentId;
-
-  // Récupérer le référent avec téléphone
-  const referent = referentId
-    ? await prisma.user.findUnique({
-        where: { id: referentId },
-        select: { id: true, email: true, phone: true },
-      })
-    : null;
-
   // Récupérer le nombre de notifications non lues
   const notificationCount = await prisma.notification.count({
     where: {
@@ -140,7 +129,6 @@ export default async function VendeurPage() {
           {/* Colonne de droite */}
           <div className="col-lg-6">
             <TeamOnlineStatus />
-            <MessageBlock referent={referent} />
             <DemandesBlock userRole={session.user.role} userEmail={session.user.email} userPrenom={currentUser?.firstName || ''} userNom={currentUser?.lastName || ''} />
           </div>
         </div>
