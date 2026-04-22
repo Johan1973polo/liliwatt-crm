@@ -26,6 +26,7 @@ model User {
   isActive        Boolean  @default(true)
   deletedAt       DateTime?
   isAvailable     Boolean? // Statut de disponibilité du vendeur: null = aucune action, true = disponible, false = non disponible
+  linkVisio       String?   // Lien Meet permanent du référent
   lastSeen        DateTime? // Dernière activité (pour statut en ligne)
 
   // Relations
