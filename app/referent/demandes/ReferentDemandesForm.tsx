@@ -38,10 +38,9 @@ const TYPES_DEMANDE = [
 type RequestType = typeof TYPES_DEMANDE[number]['id'];
 
 export default function ReferentDemandesForm({
-  referentId,
   vendors,
 }: {
-  referentId: string;
+  referentId?: string;
   vendors: Vendor[];
 }) {
   const router = useRouter();
@@ -57,45 +56,52 @@ export default function ReferentDemandesForm({
   const [recrueEmail, setRecrueEmail] = useState('');
   const [microEntrepriseAssistance, setMicroEntrepriseAssistance] = useState(false);
 
+  // Champs demande admin
+  const [sujet, setSujet] = useState('');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const payload: Record<string, any> = { description };
+      let response: Response;
 
       if (requestType === 'INTEGRATION') {
-        payload.recrueName = recrueName;
-        payload.recrueFirstName = recrueFirstName;
-        payload.recruePhone = recruePhone;
-        payload.recrueEmail = recrueEmail;
-        payload.microEntrepriseAssistance = microEntrepriseAssistance;
+        response = await fetch('/api/demandes/parrainage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prenom: recrueFirstName, nom: recrueName,
+            telephone: recruePhone, email: recrueEmail,
+            motivation: description || (microEntrepriseAssistance ? 'Assistance micro-entreprise demandee' : ''),
+          }),
+        });
+      } else if (requestType === 'FIN_COLLABORATION') {
+        const vendorEmail = vendors.find(v => v.id === selectedVendor)?.email || '';
+        response = await fetch('/api/demandes/fin-collaboration', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            vendeur_email: vendorEmail, vendeur_nom: vendorEmail,
+            date_fin: new Date().toLocaleDateString('fr-FR'),
+            motif: description, commentaire: '',
+          }),
+        });
+      } else {
+        // DEMANDE_ADMIN
+        response = await fetch('/api/demandes/administrative', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sujet, message: description }),
+        });
       }
-
-      if (requestType === 'FIN_COLLABORATION' && selectedVendor) {
-        payload.vendorEmail = vendors.find(v => v.id === selectedVendor)?.email;
-      }
-
-      const response = await fetch('/api/requests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: requestType,
-          referentId,
-          vendorId: (selectedVendor && selectedVendor !== 'myself') ? selectedVendor : null,
-          payload,
-        }),
-      });
 
       if (response.ok) {
         alert('Demande envoyee avec succes !');
-        setDescription('');
-        setSelectedVendor('');
-        setRecrueName('');
-        setRecrueFirstName('');
-        setRecruePhone('');
-        setRecrueEmail('');
-        setMicroEntrepriseAssistance(false);
+        setDescription(''); setSelectedVendor('');
+        setRecrueName(''); setRecrueFirstName('');
+        setRecruePhone(''); setRecrueEmail('');
+        setMicroEntrepriseAssistance(false); setSujet('');
         router.refresh();
       } else {
         const data = await response.json();
@@ -179,7 +185,7 @@ export default function ReferentDemandesForm({
                     checked={microEntrepriseAssistance} onChange={(e) => setMicroEntrepriseAssistance(e.target.checked)} disabled={loading} />
                   <label className="form-check-label" htmlFor="microEntrepriseAssistance">
                     <i className="bi bi-building me-2"></i>
-                    Assistance a la creation et a l&apos;immatriculation d&apos;une micro-entreprise
+                    Assistance a la creation d&apos;une micro-entreprise
                   </label>
                 </div>
               </div>
@@ -199,6 +205,18 @@ export default function ReferentDemandesForm({
                   <option key={vendor.id} value={vendor.id}>{vendor.email}</option>
                 ))}
               </select>
+            </div>
+          )}
+
+          {/* Sujet (demande admin) */}
+          {requestType === 'DEMANDE_ADMIN' && (
+            <div className="mb-3">
+              <label className="form-label fw-semibold">
+                <i className="bi bi-tag me-2"></i>Sujet *
+              </label>
+              <input type="text" className="form-control" value={sujet}
+                onChange={(e) => setSujet(e.target.value)} required disabled={loading}
+                placeholder="Ex: Demande de documents, question facturation..." />
             </div>
           )}
 
@@ -223,7 +241,8 @@ export default function ReferentDemandesForm({
           </div>
 
           {/* Bouton envoi */}
-          <button type="submit" className="btn btn-lg w-100" disabled={loading || (requestType === 'FIN_COLLABORATION' && !selectedVendor)}
+          <button type="submit" className="btn btn-lg w-100"
+            disabled={loading || (requestType === 'FIN_COLLABORATION' && !selectedVendor) || (requestType === 'DEMANDE_ADMIN' && !sujet.trim())}
             style={{ background: activeType.color, color: 'white', fontWeight: 700, border: 'none' }}>
             {loading ? (
               <><span className="spinner-border spinner-border-sm me-2" />Envoi en cours...</>
@@ -236,7 +255,7 @@ export default function ReferentDemandesForm({
         <div className="alert mt-4 mb-0" style={{ background: activeType.bg, border: `1px solid ${activeType.color}30` }}>
           <i className="bi bi-info-circle me-2" style={{ color: activeType.color }}></i>
           <small style={{ color: '#4b5563' }}>
-            Votre demande sera traitee par l&apos;equipe LILIWATT dans les meilleurs delais.
+            Votre demande sera envoyee par email a l&apos;equipe LILIWATT (bo@liliwatt.fr).
           </small>
         </div>
       </div>

@@ -109,3 +109,32 @@ export function renderEmailBriefing({ vendeur_prenom, referent_prenom, referent_
 </div>
 </body></html>`;
 }
+
+export function renderEmailAdministrative({ auteur_prenom, auteur_nom, auteur_email, auteur_role, sujet, message, date }: any) {
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#ecfdf5;font-family:-apple-system,sans-serif;">
+<div style="max-width:600px;margin:40px auto;background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.06);">
+  <div style="background:linear-gradient(135deg,#059669,#7c3aed);padding:32px 28px;text-align:center;">
+    <div style="color:white;font-size:26px;font-weight:800;letter-spacing:-0.5px;">⚡ LILIWATT</div>
+    <div style="color:rgba(255,255,255,0.9);font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-top:6px;">Demande administrative</div>
+  </div>
+  <div style="padding:32px 28px;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#059669;margin-bottom:10px;">📮 ${date}</div>
+    <h2 style="color:#1e1b4b;font-size:22px;font-weight:800;letter-spacing:-0.3px;margin:0 0 8px;line-height:1.2;">${sujet}</h2>
+    <p style="color:#6b7280;font-size:14px;margin:0 0 24px;">
+      Demande du ${auteur_role === 'VENDEUR' ? 'vendeur' : 'referent'} <strong style="color:#1e1b4b;">${auteur_prenom} ${auteur_nom}</strong>.
+    </p>
+    <div style="background:linear-gradient(135deg,#ecfdf5,#f5f3ff);border-left:4px solid #059669;border-radius:12px;padding:20px 24px;margin-bottom:20px;">
+      <div style="font-size:11px;color:#059669;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:10px;">Message</div>
+      <div style="color:#374151;font-size:14px;line-height:1.7;white-space:pre-wrap;">${message}</div>
+    </div>
+    <div style="background:#f5f3ff;border-radius:10px;padding:14px 18px;font-size:13px;color:#6b7280;">
+      Pour repondre : <a href="mailto:${auteur_email}" style="color:#7c3aed;text-decoration:none;font-weight:600;">${auteur_email}</a>
+    </div>
+  </div>
+  <div style="background:#1e1b4b;padding:20px 28px;text-align:center;">
+    <div style="color:rgba(255,255,255,0.75);font-size:11px;letter-spacing:1px;">LILIWATT · <a href="mailto:bo@liliwatt.fr" style="color:#d946ef;text-decoration:none;">bo@liliwatt.fr</a></div>
+  </div>
+</div>
+</body></html>`;
+}
