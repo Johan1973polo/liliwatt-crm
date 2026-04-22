@@ -179,3 +179,10 @@ h1, h2, h3, h4, h5, h6 {
 .badge.bg-primary { background: #7c3aed !important; }
 a { color: #7c3aed; }
 a:hover { color: #6d28d9; }
+
+/* Badge notification pop animation */
+@keyframes badgePop {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}

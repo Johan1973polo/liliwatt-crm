@@ -4,6 +4,33 @@ import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import useSWR from 'swr';
+
+const fetcher = (url: string) => fetch(url).then(r => r.json()).catch(() => ({ count: 0 }));
+
+function NotifBadge({ count }: { count: number }) {
+  if (!count || count === 0) return null;
+  return (
+    <span style={{
+      background: 'linear-gradient(135deg, #7c3aed 0%, #d946ef 100%)',
+      color: 'white',
+      borderRadius: '10px',
+      padding: '2px 9px',
+      fontSize: '11px',
+      fontWeight: 700,
+      marginLeft: '8px',
+      minWidth: '22px',
+      textAlign: 'center',
+      display: 'inline-block',
+      lineHeight: 1.5,
+      boxShadow: '0 2px 8px rgba(124, 58, 237, 0.45)',
+      letterSpacing: '-0.2px',
+      animation: 'badgePop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+    }}>
+      {count > 9 ? '9+' : count}
+    </span>
+  );
+}
 
 interface NavbarProps {
   userEmail: string;
@@ -26,6 +53,17 @@ export default function Navbar({
 }: NavbarProps) {
   const pathname = usePathname();
 
+  // Badges temps réel via SWR (refresh 30s)
+  const { data: msgData } = useSWR('/api/messages/count-unread', fetcher, { refreshInterval: 30000 });
+  const { data: perfData } = useSWR('/api/activities/count-new', fetcher, { refreshInterval: 30000 });
+  const { data: annData } = useSWR('/api/referent/announcements/count-unread', fetcher, { refreshInterval: 30000 });
+  const { data: demData } = useSWR('/api/demandes/count-unread', fetcher, { refreshInterval: 30000 });
+
+  const liveMsg = msgData?.count || notificationCount;
+  const livePerf = perfData?.count || performancesActivityCount;
+  const liveAnn = annData?.count || 0;
+  const liveDem = demData?.count || 0;
+
   const getRoleLabel = (role: string) => {
     switch (role) {
       case 'ADMIN':
@@ -43,7 +81,7 @@ export default function Navbar({
     return {
       links: [
         { href: '/calendar', label: 'Agenda', icon: 'bi-calendar-week' },
-        { href: '/performances', label: 'Performances', icon: 'bi-graph-up-arrow', count: performancesActivityCount, badgeColor: 'success' },
+        { href: '/performances', label: 'Performances', icon: 'bi-graph-up-arrow', count: livePerf, badgeColor: 'success' },
       ],
       dropdowns: [
         {
@@ -68,8 +106,8 @@ export default function Navbar({
           label: 'Gestion',
           icon: 'bi-gear',
           items: [
-            { href: '/admin/demandes', label: 'Demandes', icon: 'bi-clipboard2-check' },
-            { href: '/admin/messages', label: 'Messagerie', icon: 'bi-chat-dots', count: notificationCount, badgeColor: 'primary' },
+            { href: '/admin/demandes', label: 'Demandes', icon: 'bi-clipboard2-check', count: liveDem, badgeColor: 'primary' },
+            { href: '/admin/messages', label: 'Messagerie', icon: 'bi-chat-dots', count: liveMsg, badgeColor: 'primary' },
             { href: '/admin/echanges', label: 'Échanges', icon: 'bi-eye' },
             { href: '/admin/links', label: 'Liens Globaux', icon: 'bi-link-45deg' },
             { href: '/admin/challenge', label: 'Challenge', icon: 'bi-trophy' },
@@ -86,12 +124,12 @@ export default function Navbar({
       return [
         { href: '/referent', label: 'Mes Vendeurs', icon: 'bi-people' },
         { href: '/referent/demandes', label: 'Demandes', icon: 'bi-clipboard-check' },
-        { href: '/referent/messages', label: 'Messagerie', icon: 'bi-chat-dots', count: notificationCount, badgeColor: 'primary' },
+        { href: '/referent/messages', label: 'Messagerie', icon: 'bi-chat-dots', count: liveMsg, badgeColor: 'primary' },
         { href: '/referent/process', label: 'Process', icon: 'bi-diagram-3' },
         { href: '/formation', label: 'Formation', icon: 'bi-mortarboard' },
         { href: '/formation/gestion', label: 'Gestion Formation', icon: 'bi-gear' },
         { href: '/calendar', label: 'Agenda', icon: 'bi-calendar-week' },
-        { href: '/performances', label: 'Performances', icon: 'bi-graph-up-arrow', count: performancesActivityCount, badgeColor: 'success' },
+        { href: '/performances', label: 'Performances', icon: 'bi-graph-up-arrow', count: livePerf, badgeColor: 'success' },
       ];
     } else {
       return [
@@ -99,9 +137,10 @@ export default function Navbar({
         { href: '/vendeur/process', label: 'Process', icon: 'bi-diagram-3' },
         { href: '/formation', label: 'Formation', icon: 'bi-mortarboard' },
         { href: '/calendar', label: 'Agenda', icon: 'bi-calendar-week' },
-        { href: '/performances', label: 'Performances', icon: 'bi-graph-up-arrow', count: performancesActivityCount, badgeColor: 'success' },
+        { href: '/performances', label: 'Performances', icon: 'bi-graph-up-arrow', count: livePerf, badgeColor: 'success' },
         { href: '/vendeur/messages/direction', label: 'Direction', icon: 'bi-chat-left-text', count: directionMessageCount, badgeColor: 'danger' },
         { href: '/vendeur/messages/referent', label: 'Référent', icon: 'bi-chat-right-text', count: referentMessageCount, badgeColor: 'primary' },
+        { href: '/vendeur/annonces', label: 'Annonces', icon: 'bi-megaphone', count: liveAnn, badgeColor: 'warning' },
       ];
     }
   };
@@ -135,9 +174,7 @@ export default function Navbar({
                     >
                       <i className={`${link.icon} me-1`}></i>
                       {link.label}
-                      {link.count !== undefined && link.count > 0 && (
-                        <span className={`badge bg-${link.badgeColor || 'danger'} ms-2`}>{link.count}</span>
-                      )}
+                      <NotifBadge count={link.count || 0} />
                     </Link>
                   </li>
                 ))}
@@ -164,9 +201,7 @@ export default function Navbar({
                           >
                             <i className={`${item.icon} me-2`}></i>
                             {item.label}
-                            {item.count !== undefined && item.count > 0 && (
-                              <span className={`badge bg-${item.badgeColor || 'danger'} ms-2`}>{item.count}</span>
-                            )}
+                            <NotifBadge count={item.count || 0} />
                           </Link>
                         </li>
                       ))}
@@ -184,9 +219,7 @@ export default function Navbar({
                   >
                     <i className={`${link.icon} me-1`}></i>
                     {link.label}
-                    {link.count !== undefined && link.count > 0 && (
-                      <span className={`badge bg-${link.badgeColor || 'danger'} ms-2`}>{link.count}</span>
-                    )}
+                    <NotifBadge count={link.count || 0} />
                   </Link>
                 </li>
               ))
