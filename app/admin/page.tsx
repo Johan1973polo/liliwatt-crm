@@ -3,15 +3,15 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Navbar from '@/components/Navbar';
-import Link from 'next/link';
-import Image from 'next/image';
-import DeleteVendorButton from './DeleteVendorButton';
 import RecentDeclarations from './RecentDeclarations';
+import AdminVendeursTable from './AdminVendeursTable';
+
+export const revalidate = 0;
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || (session.user.role !== 'ADMIN')) {
+  if (!session || session.user.role !== 'ADMIN') {
     redirect('/auth/signin');
   }
 
@@ -22,10 +22,10 @@ export default async function AdminPage() {
       include: { user: { select: { firstName: true, lastName: true, email: true, courtierNumber: true } } },
     }),
     prisma.user.findMany({
-      where: { role: 'VENDEUR' },
-      include: {
-        credentials: true,
-        personalLinks: true,
+      where: { role: 'VENDEUR', isActive: true },
+      select: {
+        id: true, email: true, phone: true, courtierNumber: true,
+        createdAt: true, lastSeen: true,
         referent: { select: { email: true } },
       },
       orderBy: { createdAt: 'desc' },
@@ -34,18 +34,33 @@ export default async function AdminPage() {
       where: { role: 'REFERENT', isActive: true },
       select: {
         id: true, email: true, firstName: true, lastName: true,
-        phone: true, createdAt: true, linkVisio: true,
+        phone: true, createdAt: true, lastSeen: true, linkVisio: true,
         _count: { select: { vendeurs: true } },
       },
       orderBy: { createdAt: 'desc' },
     }),
   ]);
 
-  const totalVendeurs = vendeurs.filter(v => v.isActive !== false).length;
+  const totalVendeurs = vendeurs.length;
   const totalReferents = referents.length;
+  const now = Date.now();
 
-  const thStyle = { padding: '12px 16px', textAlign: 'left' as const, fontSize: '12px', fontWeight: 700, color: '#7c3aed', letterSpacing: '1px', textTransform: 'uppercase' as const };
-  const tdStyle = { padding: '14px 16px' };
+  const isOnline = (lastSeen: Date | null) => {
+    if (!lastSeen) return false;
+    return (now - new Date(lastSeen).getTime()) < 5 * 60 * 1000;
+  };
+
+  const thStyle: React.CSSProperties = { padding: '14px 18px', textAlign: 'left', fontSize: '11px', fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1.5px' };
+  const tdStyle: React.CSSProperties = { padding: '14px 18px', verticalAlign: 'middle' };
+
+  // Serialize vendeurs for client component
+  const vendeursData = vendeurs.map(v => ({
+    id: v.id, email: v.email, phone: v.phone,
+    courtierNumber: v.courtierNumber,
+    createdAt: v.createdAt.toISOString(),
+    lastSeen: v.lastSeen?.toISOString() || null,
+    referentEmail: v.referent?.email || null,
+  }));
 
   return (
     <>
@@ -94,8 +109,14 @@ export default async function AdminPage() {
                 {referents.map(r => (
                   <tr key={r.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
                     <td style={tdStyle}>
-                      <div style={{ fontWeight: 600, color: '#1e1b4b' }}>{r.firstName} {r.lastName}</div>
-                      <div style={{ fontSize: '12px', color: '#6b7280' }}>{r.email}</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: isOnline(r.lastSeen) ? '#10b981' : '#9ca3af', flexShrink: 0 }}
+                          title={isOnline(r.lastSeen) ? 'En ligne' : 'Hors ligne'} />
+                        <div>
+                          <div style={{ fontWeight: 600, color: '#1e1b4b' }}>{r.firstName} {r.lastName}</div>
+                          <div style={{ fontSize: '12px', color: '#6b7280' }}>{r.email}</div>
+                        </div>
+                      </div>
                     </td>
                     <td style={{ ...tdStyle, color: '#6b7280', fontSize: '13px' }}>{r.phone || '—'}</td>
                     <td style={tdStyle}>
@@ -121,98 +142,17 @@ export default async function AdminPage() {
         </section>
 
         {/* Tableau Vendeurs */}
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#1e1b4b', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <i className="bi bi-person-fill"></i> Vendeurs ({totalVendeurs})
-          </h2>
-          <div style={{ background: 'linear-gradient(135deg, #f5f3ff, #fae8ff)', border: '1px solid #d946ef', borderRadius: '12px', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12px', color: '#1e1b4b' }}>
-            <span style={{ fontSize: '18px' }}>ℹ️</span>
-            <span><strong>Creation via LILIWATT Admin</strong></span>
-          </div>
-        </div>
-
-        {vendeurs.length === 0 ? (
-          <div className="card">
-            <div className="card-body text-center py-5">
-              <i className="bi bi-inbox display-1 text-muted"></i>
-              <p className="text-muted mt-3 mb-0">Aucun vendeur pour le moment.</p>
+        <section>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#1e1b4b', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <i className="bi bi-person-fill"></i> Vendeurs ({totalVendeurs})
+            </h2>
+            <div style={{ background: 'linear-gradient(135deg, #f5f3ff, #fae8ff)', border: '1px solid #d946ef', borderRadius: '12px', padding: '8px 14px', fontSize: '12px', color: '#1e1b4b' }}>
+              <strong>Creation via LILIWATT Admin</strong>
             </div>
           </div>
-        ) : (
-          <div className="card">
-            <div className="card-body p-0">
-              <div className="table-responsive">
-                <table className="table table-hover mb-0">
-                  <thead className="table-light">
-                    <tr>
-                      <th>Vendeur</th>
-                      <th>N Courtier</th>
-                      <th>Referent</th>
-                      <th>Telephone</th>
-                      <th className="text-center">Identifiants</th>
-                      <th className="text-center">Liens perso</th>
-                      <th className="text-center">Statut</th>
-                      <th>Cree le</th>
-                      <th className="text-end">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {vendeurs.map((vendeur) => (
-                      <tr key={vendeur.id}>
-                        <td>
-                          <div className="d-flex align-items-center gap-2">
-                            {vendeur.avatar && (
-                              <Image src={vendeur.avatar} alt={vendeur.email} width={35} height={35}
-                                className="rounded-circle" style={{ objectFit: 'cover' }} />
-                            )}
-                            <span className="fw-semibold">{vendeur.email}</span>
-                          </div>
-                        </td>
-                        <td>
-                          {vendeur.courtierNumber ? (
-                            <span className="badge bg-primary">N {vendeur.courtierNumber}</span>
-                          ) : (
-                            <span className="badge bg-warning text-dark"><i className="bi bi-exclamation-triangle me-1"></i>Non attribue</span>
-                          )}
-                        </td>
-                        <td>
-                          {vendeur.referent ? (
-                            <span className="text-muted"><i className="bi bi-person-badge me-1"></i>{vendeur.referent.email}</span>
-                          ) : (<span className="text-muted">-</span>)}
-                        </td>
-                        <td>
-                          {vendeur.phone ? (
-                            <span className="text-muted"><i className="bi bi-telephone me-1"></i>{vendeur.phone}</span>
-                          ) : (<span className="text-muted">-</span>)}
-                        </td>
-                        <td className="text-center"><span className="badge bg-info">{vendeur.credentials.length}</span></td>
-                        <td className="text-center"><span className="badge bg-secondary">{vendeur.personalLinks.length}</span></td>
-                        <td className="text-center">
-                          {vendeur.isAvailable === null ? (
-                            <span className="badge bg-secondary"><i className="bi bi-question-circle me-1"></i>Aucune</span>
-                          ) : vendeur.isAvailable ? (
-                            <span className="badge bg-success"><i className="bi bi-check-circle me-1"></i>Dispo</span>
-                          ) : (
-                            <span className="badge bg-danger"><i className="bi bi-x-circle me-1"></i>Non dispo</span>
-                          )}
-                        </td>
-                        <td><span className="text-muted small">{new Date(vendeur.createdAt).toLocaleDateString('fr-FR')}</span></td>
-                        <td>
-                          <div className="d-flex gap-1 justify-content-end">
-                            <Link href={`/admin/vendors/${vendeur.id}/edit`} className="btn btn-sm btn-info" title="Editer">
-                              <i className="bi bi-pencil"></i>
-                            </Link>
-                            <DeleteVendorButton vendorId={vendeur.id} vendorEmail={vendeur.email} inline={true} />
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
+          <AdminVendeursTable vendeurs={vendeursData} />
+        </section>
       </div>
     </>
   );
