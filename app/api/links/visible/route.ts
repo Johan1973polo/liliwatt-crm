@@ -5,13 +5,13 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   const session = await getServerSession(authOptions);
-  if (!session?.user) return NextResponse.json({ links: [] });
+  if (!session?.user) return NextResponse.json({ links: [], rgpdLink: null });
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
     select: { id: true, role: true, referentId: true },
   });
-  if (!user) return NextResponse.json({ links: [] });
+  if (!user) return NextResponse.json({ links: [], rgpdLink: null });
 
   // Scopes globaux visibles selon le role
   const globalScopes = ['GLOBAL']; // visible par tous
@@ -35,5 +35,15 @@ export async function GET() {
     orderBy: [{ scope: 'asc' }, { order: 'asc' }],
   });
 
-  return NextResponse.json({ links });
+  // Lien RGPD pour les vendeurs (stocke dans Credential serviceName=RGPD, login=url)
+  let rgpdLink: string | null = null;
+  if (user.role === 'VENDEUR') {
+    const rgpdCred = await prisma.credential.findFirst({
+      where: { userId: user.id, serviceName: 'RGPD' },
+      select: { login: true },
+    });
+    if (rgpdCred) rgpdLink = rgpdCred.login;
+  }
+
+  return NextResponse.json({ links, rgpdLink });
 }

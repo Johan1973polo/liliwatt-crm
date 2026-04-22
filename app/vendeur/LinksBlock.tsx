@@ -1,119 +1,121 @@
 'use client';
 
 import useSWR from 'swr';
+import { useState } from 'react';
 
-interface Link {
+interface LinkItem {
   id: string;
   title: string;
   url: string;
+  icon: string | null;
+  subtitle: string | null;
   scope: string;
+  isCopy?: boolean;
 }
 
-const fetcher = (url: string) => fetch(url).then(r => r.json()).catch(() => ({ links: [] }));
+const fetcher = (url: string) => fetch(url).then(r => r.json()).catch(() => ({ links: [], rgpdLink: null }));
 
 export default function LinksBlock() {
   const { data } = useSWR('/api/links/visible', fetcher, { refreshInterval: 60000 });
-  const links: Link[] = data?.links || [];
+  const [copied, setCopied] = useState<string | null>(null);
 
-  if (links.length === 0) return null;
+  const links: LinkItem[] = data?.links || [];
+  const rgpdLink: string | null = data?.rgpdLink || null;
 
-  const globalLinks = links.filter(l => l.scope.startsWith('GLOBAL'));
-  const teamLinks = links.filter(l => l.scope === 'TEAM');
-  const userLinks = links.filter(l => l.scope === 'USER');
+  const allCards: LinkItem[] = [
+    ...links,
+    ...(rgpdLink ? [{
+      id: 'rgpd',
+      icon: '🔒',
+      title: 'Mon lien RGPD',
+      subtitle: 'Cliquer pour copier',
+      url: rgpdLink,
+      scope: 'RGPD',
+      isCopy: true,
+    }] : []),
+  ];
+
+  if (allCards.length === 0) return null;
+
+  async function handleClick(e: React.MouseEvent, card: LinkItem) {
+    if (card.isCopy) {
+      e.preventDefault();
+      await navigator.clipboard.writeText(card.url);
+      setCopied(card.id);
+      setTimeout(() => setCopied(null), 2000);
+    }
+  }
 
   return (
     <div className="card mb-4">
       <div className="card-header bg-white">
-        <h5 className="mb-0">
-          <i className="bi bi-link-45deg me-2"></i>
-          Mes boutons / liens
+        <h5 className="mb-0" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <i className="bi bi-link-45deg"></i> Mes liens utiles
         </h5>
       </div>
       <div className="card-body">
-        {globalLinks.length > 0 && (
-          <>
-            <div style={{
-              fontSize: '11px', fontWeight: 700, letterSpacing: '2px',
-              textTransform: 'uppercase', color: '#7c3aed', marginBottom: '12px',
-              display: 'flex', alignItems: 'center', gap: '8px',
-            }}>
-              <i className="bi bi-globe2"></i> Liens LILIWATT
-            </div>
-            <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-              gap: '12px', marginBottom: globalLinks.length > 0 && (teamLinks.length > 0 || userLinks.length > 0) ? '20px' : '0',
-            }}>
-              {globalLinks.map(link => (
-                <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer"
-                  style={{
-                    background: 'linear-gradient(135deg, #f5f3ff, #fae8ff)',
-                    border: '1px solid #e9d5ff', borderRadius: '12px',
-                    padding: '14px 18px', textDecoration: 'none',
-                    display: 'flex', alignItems: 'center', gap: '10px',
-                    transition: 'all 0.2s ease',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c3aed'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#e9d5ff'; e.currentTarget.style.transform = 'translateY(0)'; }}
-                >
-                  <span style={{ fontSize: '20px' }}><i className="bi bi-box-arrow-up-right" style={{ color: '#7c3aed' }}></i></span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{
-                      fontSize: '14px', fontWeight: 700, color: '#1e1b4b',
-                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                    }}>
-                      {link.title}
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </>
-        )}
-
-        {teamLinks.length > 0 && (
-          <>
-            <div style={{
-              fontSize: '11px', fontWeight: 700, letterSpacing: '2px',
-              textTransform: 'uppercase', color: '#ea580c', marginBottom: '12px',
-              display: 'flex', alignItems: 'center', gap: '8px',
-            }}>
-              <i className="bi bi-people"></i> Liens equipe
-            </div>
-            <div className="d-grid gap-2" style={{ marginBottom: userLinks.length > 0 ? '20px' : '0' }}>
-              {teamLinks.map(link => (
-                <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer"
-                  className="btn btn-outline-warning text-start">
-                  <i className="bi bi-box-arrow-up-right me-2"></i>{link.title}
-                </a>
-              ))}
-            </div>
-          </>
-        )}
-
-        {userLinks.length > 0 && (
-          <>
-            <div style={{
-              fontSize: '11px', fontWeight: 700, letterSpacing: '2px',
-              textTransform: 'uppercase', color: '#6b7280', marginBottom: '12px',
-              display: 'flex', alignItems: 'center', gap: '8px',
-            }}>
-              <i className="bi bi-bookmark"></i> Mes liens perso
-            </div>
-            <div className="d-grid gap-2">
-              {userLinks.map(link => (
-                <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer"
-                  style={{
-                    background: '#f9fafb', border: '1px solid #e5e7eb',
-                    borderRadius: '12px', padding: '12px 18px',
-                    textDecoration: 'none', color: '#1e1b4b', fontSize: '14px',
-                    display: 'block',
-                  }}>
-                  <i className="bi bi-box-arrow-up-right me-2" style={{ color: '#6b7280' }}></i>{link.title}
-                </a>
-              ))}
-            </div>
-          </>
-        )}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+          gap: '14px',
+        }}>
+          {allCards.map(card => (
+            <a
+              key={card.id}
+              href={card.isCopy ? '#' : card.url}
+              target={card.isCopy ? undefined : '_blank'}
+              rel="noopener noreferrer"
+              onClick={(e) => handleClick(e, card)}
+              style={{
+                background: 'white',
+                border: '1px solid #e5e7eb',
+                borderRadius: '14px',
+                padding: '22px 16px',
+                textDecoration: 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                gap: '10px',
+                transition: 'all 0.25s ease',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 10px 28px rgba(124, 58, 237, 0.15)';
+                e.currentTarget.style.borderColor = '#7c3aed';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.borderColor = '#e5e7eb';
+              }}
+            >
+              <div style={{
+                width: '56px', height: '56px', borderRadius: '16px',
+                background: 'linear-gradient(135deg, #f5f3ff, #fae8ff)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '28px',
+              }}>
+                {card.icon || '🔗'}
+              </div>
+              <div style={{
+                fontSize: '14px', fontWeight: 700, color: '#1e1b4b',
+                lineHeight: 1.2, letterSpacing: '-0.2px',
+              }}>
+                {card.title}
+              </div>
+              {(card.subtitle || card.isCopy) && (
+                <div style={{
+                  fontSize: '11px', color: '#6b7280',
+                  fontWeight: 500, lineHeight: 1.4,
+                }}>
+                  {copied === card.id ? '✅ Copie !' : (card.subtitle || '')}
+                </div>
+              )}
+            </a>
+          ))}
+        </div>
       </div>
     </div>
   );

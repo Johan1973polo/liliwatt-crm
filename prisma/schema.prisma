@@ -73,9 +73,11 @@ model Credential {
 
 model Link {
   id              String    @id @default(cuid())
-  scope           String    // GLOBAL, TEAM, USER
+  scope           String    // GLOBAL, GLOBAL_REFERENT, GLOBAL_VENDOR, TEAM, USER
   title           String
   url             String
+  icon            String?   @default("🔗")
+  subtitle        String?
   teamReferentId  String?
   userId          String?
   createdAt       DateTime  @default(now())

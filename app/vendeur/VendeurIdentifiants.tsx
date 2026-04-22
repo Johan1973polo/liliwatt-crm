@@ -124,32 +124,6 @@ export default function VendeurIdentifiants() {
           </tbody>
         </table>
 
-        {/* Lien RGPD */}
-        {data.lienRgpd && (
-          <div className="d-flex justify-content-between align-items-center p-3 border-top" style={{ background: '#f0fdf4' }}>
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <strong style={{ color: '#16a34a', fontSize: '13px' }}>
-                <i className="bi bi-shield-lock me-1"></i>Mon lien RGPD
-              </strong>
-              <a
-                href={data.lienRgpd}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="d-block text-break mt-1"
-                style={{ fontSize: '12px', color: '#7c3aed' }}
-              >
-                {data.lienRgpd}
-              </a>
-            </div>
-            <button
-              className="btn btn-sm btn-outline-success ms-2"
-              onClick={() => copy(data.lienRgpd, 'rgpd')}
-              title="Copier le lien"
-            >
-              {copied === 'rgpd' ? <i className="bi bi-check-lg"></i> : <i className="bi bi-clipboard"></i>}
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
