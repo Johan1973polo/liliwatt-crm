@@ -2,14 +2,13 @@ import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import Link from 'next/link';
 import Navbar from '@/components/Navbar';
-import VendeursTableau from './VendeursTableau';
 import VendeurIdentifiants from '../vendeur/VendeurIdentifiants';
 import LinksBlock from '../vendeur/LinksBlock';
 import QuickAccessCards from '../vendeur/QuickAccessCards';
 import MarchesEnergie from '@/components/MarchesEnergie';
 import DeclarationButtons from '../vendeur/DeclarationButtons';
-import DemandesBlock from '../vendeur/DemandesBlock';
 import AutoRefresh from '@/components/AutoRefresh';
 
 export const revalidate = 0;
@@ -23,49 +22,15 @@ export default async function ReferentPage() {
 
   const userId = session.user.id;
 
-  // Récupérer les liens personnels du référent
+  // Liens personnels du referent
   const personalLinks = await prisma.link.findMany({
-    where: {
-      scope: 'USER',
-      userId,
-    },
+    where: { scope: 'USER', userId },
     orderBy: { order: 'asc' },
   });
 
-  // Récupérer les vendeurs du référent
-  const vendeurs = await prisma.user.findMany({
-    where: {
-      role: 'VENDEUR',
-      referentId: session.user.id,
-    },
-    select: {
-      id: true,
-      email: true,
-      phone: true,
-      createdAt: true,
-      isActive: true,
-      courtierNumber: true,
-      avatar: true,
-    },
-    orderBy: { createdAt: 'desc' },
-  });
-
-  // Récupérer les notifications non lues (SAUF performances)
-  const unreadCount = await prisma.notification.count({
-    where: {
-      userId: session.user.id,
-      isRead: false,
-      kind: 'MESSAGE',
-    },
-  });
-
-  // Compter les notifications de performances non lues
-  const performancesActivityCount = await prisma.notification.count({
-    where: {
-      userId: session.user.id,
-      kind: { in: ['SALE_MADE', 'INVOICE_RECEIVED'] },
-      isRead: false,
-    },
+  // Compter les vendeurs actifs (pour le widget)
+  const vendeurCount = await prisma.user.count({
+    where: { role: 'VENDEUR', referentId: userId, isActive: true },
   });
 
   return (
@@ -73,50 +38,69 @@ export default async function ReferentPage() {
       <AutoRefresh interval={10000} />
       <Navbar
         userEmail={session.user.email}
-        userRole={session.user.role} userAvatar={session.user.avatar}
-        notificationCount={unreadCount}
-        performancesActivityCount={performancesActivityCount}
+        userRole={session.user.role}
+        userAvatar={session.user.avatar}
       />
 
       <div className="container-fluid py-4">
-        {/* Accès rapides */}
+        {/* Acces rapides */}
         <QuickAccessCards />
 
         <MarchesEnergie />
 
-        {/* Annonces à l'équipe */}
+        {/* Annonces a l equipe */}
         <DeclarationButtons />
 
-        {/* Section Liens et Identifiants */}
+        {/* Widget Mon equipe */}
+        <div style={{
+          background: 'linear-gradient(135deg, #1e1b4b 0%, #7c3aed 100%)',
+          borderRadius: '16px',
+          padding: '28px 32px',
+          marginBottom: '24px',
+          color: 'white',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '16px',
+        }}>
+          <div>
+            <div style={{
+              fontSize: '11px', fontWeight: 700, letterSpacing: '2px',
+              textTransform: 'uppercase', opacity: 0.7, marginBottom: '6px',
+            }}>
+              Mon equipe
+            </div>
+            <div style={{ fontSize: '24px', fontWeight: 700, letterSpacing: '-0.5px' }}>
+              Piloter mes vendeurs
+            </div>
+            <div style={{ fontSize: '13px', opacity: 0.8, marginTop: '4px' }}>
+              {vendeurCount} vendeur{vendeurCount > 1 ? 's' : ''} actif{vendeurCount > 1 ? 's' : ''} — statut en ligne, coordonnees, acces rapide aux profils
+            </div>
+          </div>
+          <Link
+            href="/referent/vendors"
+            style={{
+              background: 'white', color: '#7c3aed', padding: '14px 28px',
+              borderRadius: '12px', textDecoration: 'none', fontWeight: 700,
+              fontSize: '14px', letterSpacing: '0.5px',
+              display: 'inline-flex', alignItems: 'center', gap: '8px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            }}
+          >
+            Voir mon equipe <span style={{ fontSize: '18px' }}>→</span>
+          </Link>
+        </div>
+
+        {/* Liens et Identifiants */}
         <div className="row mb-4">
           <div className="col-md-6">
             <LinksBlock links={personalLinks} />
           </div>
           <div className="col-md-6">
             <VendeurIdentifiants />
-            <DemandesBlock userRole={session.user.role} userEmail={session.user.email} userPrenom="" userNom="" />
           </div>
         </div>
-
-        <div className="mb-4">
-          <h1 className="h2 mb-0">
-            <i className="bi bi-people-fill me-2"></i>
-            Mes Vendeurs
-          </h1>
-        </div>
-
-        {vendeurs.length === 0 ? (
-          <div className="card">
-            <div className="card-body text-center py-5">
-              <i className="bi bi-inbox display-1 text-muted"></i>
-              <p className="text-muted mt-3 mb-0">
-                Aucun vendeur dans votre équipe. Créez-en un pour commencer.
-              </p>
-            </div>
-          </div>
-        ) : (
-          <VendeursTableau vendeurs={vendeurs} />
-        )}
       </div>
     </>
   );

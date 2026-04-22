@@ -115,7 +115,8 @@ export default function Navbar({
   const getNavLinks = () => {
     if (userRole === 'REFERENT') {
       return [
-        { href: '/referent', label: 'Mes Vendeurs', icon: 'bi-people' },
+        { href: '/referent', label: 'Accueil', icon: 'bi-house' },
+        { href: '/referent/vendors', label: 'Mes Vendeurs', icon: 'bi-people' },
         { href: '/referent/demandes', label: 'Demandes', icon: 'bi-clipboard-check' },
         { href: '/referent/messages', label: 'Messagerie', icon: 'bi-chat-dots', count: liveMsg, badgeColor: 'primary' },
         { href: '/referent/process', label: 'Process', icon: 'bi-diagram-3' },
