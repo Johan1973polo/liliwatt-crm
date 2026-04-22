@@ -78,10 +78,10 @@ export default async function AdminPage() {
             <i className="bi bi-people-fill me-2"></i>
             Vendeurs
           </h1>
-          <Link href="/admin/vendors/new" className="btn btn-primary">
-            <i className="bi bi-plus-circle me-2"></i>
-            Nouveau vendeur
-          </Link>
+          <div style={{ background: 'linear-gradient(135deg, #f5f3ff, #fae8ff)', border: '1px solid #d946ef', borderRadius: '12px', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12px', color: '#1e1b4b' }}>
+            <span style={{ fontSize: '18px' }}>ℹ️</span>
+            <span><strong>Création via LILIWATT Admin</strong> — vendeurs créés avec Zoho + Drive + CRM automatiquement</span>
+          </div>
         </div>
 
         {vendeurs.length === 0 ? (
