@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import VendeurIdentifiants from '../vendeur/VendeurIdentifiants';
 import LinksBlock from '../vendeur/LinksBlock';
 import QuickAccessCards from '../vendeur/QuickAccessCards';
+
 import MarchesEnergie from '@/components/MarchesEnergie';
 import DeclarationButtons from '../vendeur/DeclarationButtons';
 import AutoRefresh from '@/components/AutoRefresh';
@@ -21,12 +22,6 @@ export default async function ReferentPage() {
   }
 
   const userId = session.user.id;
-
-  // Liens personnels du referent
-  const personalLinks = await prisma.link.findMany({
-    where: { scope: 'USER', userId },
-    orderBy: { order: 'asc' },
-  });
 
   // Compter les vendeurs actifs (pour le widget)
   const vendeurCount = await prisma.user.count({
@@ -95,7 +90,7 @@ export default async function ReferentPage() {
         {/* Liens et Identifiants */}
         <div className="row mb-4">
           <div className="col-md-6">
-            <LinksBlock links={personalLinks} />
+            <LinksBlock />
           </div>
           <div className="col-md-6">
             <VendeurIdentifiants />

@@ -12,6 +12,7 @@ import QuickAccessCards from './QuickAccessCards';
 import VendeurIdentifiants from './VendeurIdentifiants';
 import DeclarationButtons from './DeclarationButtons';
 import TeamOnlineStatus from './TeamOnlineStatus';
+import LinksBlock from './LinksBlock';
 import MarchesEnergie from '@/components/MarchesEnergie';
 
 // Désactiver le cache pour cette page
@@ -133,6 +134,7 @@ export default async function VendeurPage() {
           {/* Colonne de gauche */}
           <div className="col-lg-6">
             <VendeurIdentifiants />
+            <LinksBlock />
           </div>
 
           {/* Colonne de droite */}
