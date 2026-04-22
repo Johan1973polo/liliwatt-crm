@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { mutate } from 'swr';
 
 interface Announcement {
   id: string;
@@ -16,7 +17,8 @@ export default function AnnoncesClient({ announcements }: { announcements: Annou
 
   useEffect(() => {
     if (!marked && announcements.some(a => a.reads.length === 0)) {
-      fetch('/api/referent/announcements/mark-read', { method: 'POST' });
+      fetch('/api/referent/announcements/mark-read', { method: 'POST' })
+        .then(() => mutate('/api/referent/announcements/count-unread'));
       setMarked(true);
     }
   }, [announcements, marked]);

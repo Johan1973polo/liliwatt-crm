@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { mutate } from 'swr';
 import Image from 'next/image';
 
 interface User {
@@ -44,6 +45,12 @@ export default function MessagingInterface({
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  useEffect(() => {
+    fetch('/api/messages/mark-read', { method: 'POST' })
+      .then(() => mutate('/api/messages/count-unread'))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     scrollToBottom();

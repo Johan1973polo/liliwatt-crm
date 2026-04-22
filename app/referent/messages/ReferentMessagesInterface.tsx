@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { mutate } from 'swr';
 import Image from 'next/image';
 
 interface User {
@@ -75,6 +76,13 @@ export default function ReferentMessagesInterface({
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Marquer messages comme lus + invalider badge SWR
+  useEffect(() => {
+    fetch('/api/messages/mark-read', { method: 'POST' })
+      .then(() => mutate('/api/messages/count-unread'))
+      .catch(() => {});
+  }, []);
 
   // Charger les compteurs au montage et toutes les 10 secondes
   useEffect(() => {

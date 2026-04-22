@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { mutate } from 'swr';
 
 interface Request {
   id: string;
@@ -41,6 +42,13 @@ export default function AdminDemandesTable({ requests }: { requests: Request[] }
   const router = useRouter();
   const [filterType, setFilterType] = useState<string>('ALL');
   const [filterStatus, setFilterStatus] = useState<string>('NEW');
+
+  // Marquer demandes comme lues + invalider badge SWR
+  useEffect(() => {
+    fetch('/api/demandes/mark-read', { method: 'POST' })
+      .then(() => mutate('/api/demandes/count-unread'))
+      .catch(() => {});
+  }, []);
 
   const filteredRequests = requests.filter((req) => {
     if (filterType !== 'ALL' && req.type !== filterType) return false;

@@ -53,11 +53,12 @@ export default function Navbar({
 }: NavbarProps) {
   const pathname = usePathname();
 
-  // Badges temps réel via SWR (refresh 30s)
-  const { data: msgData } = useSWR('/api/messages/count-unread', fetcher, { refreshInterval: 30000 });
-  const { data: perfData } = useSWR('/api/activities/count-new', fetcher, { refreshInterval: 30000 });
-  const { data: annData } = useSWR('/api/referent/announcements/count-unread', fetcher, { refreshInterval: 30000 });
-  const { data: demData } = useSWR('/api/demandes/count-unread', fetcher, { refreshInterval: 30000 });
+  // Badges temps réel via SWR (refresh 5s)
+  const swrOpts = { refreshInterval: 5000, revalidateOnFocus: true, revalidateOnReconnect: true, dedupingInterval: 2000 };
+  const { data: msgData } = useSWR('/api/messages/count-unread', fetcher, swrOpts);
+  const { data: perfData } = useSWR('/api/activities/count-new', fetcher, swrOpts);
+  const { data: annData } = useSWR('/api/referent/announcements/count-unread', fetcher, swrOpts);
+  const { data: demData } = useSWR('/api/demandes/count-unread', fetcher, swrOpts);
 
   const liveMsg = msgData?.count || notificationCount;
   const livePerf = perfData?.count || performancesActivityCount;
@@ -82,17 +83,9 @@ export default function Navbar({
       links: [
         { href: '/calendar', label: 'Agenda', icon: 'bi-calendar-week' },
         { href: '/performances', label: 'Performances', icon: 'bi-graph-up-arrow', count: livePerf, badgeColor: 'success' },
+        { href: '/admin/users', label: 'Utilisateurs', icon: 'bi-people' },
       ],
       dropdowns: [
-        {
-          label: 'Utilisateurs',
-          icon: 'bi-people',
-          items: [
-            { href: '/admin', label: 'Vendeurs', icon: 'bi-people' },
-            { href: '/admin/referents', label: 'Référents', icon: 'bi-person-badge' },
-            { href: '/admin/users', label: 'Admins', icon: 'bi-person-gear' },
-          ],
-        },
         {
           label: 'Formation',
           icon: 'bi-mortarboard',
@@ -130,6 +123,7 @@ export default function Navbar({
         { href: '/formation/gestion', label: 'Gestion Formation', icon: 'bi-gear' },
         { href: '/calendar', label: 'Agenda', icon: 'bi-calendar-week' },
         { href: '/performances', label: 'Performances', icon: 'bi-graph-up-arrow', count: livePerf, badgeColor: 'success' },
+        { href: '/referent/announce', label: 'Annoncer', icon: 'bi-megaphone' },
       ];
     } else {
       return [

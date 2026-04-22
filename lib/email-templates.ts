@@ -61,3 +61,51 @@ export function renderEmailAnnonceReferent({ vendeur_prenom, referent_prenom, re
     ${meetBtn}
   `);
 }
+
+export function renderEmailBriefing({ vendeur_prenom, referent_prenom, referent_nom, referent_visio, date, time, message }: any) {
+  const meetBtn = referent_visio ? `<div style="text-align:center;margin:28px 0;">
+    <a href="${referent_visio}" style="display:inline-block;background:linear-gradient(135deg,#7c3aed 0%,#d946ef 100%);color:white;padding:16px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:15px;box-shadow:0 8px 24px rgba(124,58,237,0.4);">
+      🎥 Rejoindre le salon de ${referent_prenom}
+    </a>
+  </div>` : '';
+
+  const customMsg = message ? `<div style="background:#faf5ff;border-left:3px solid #d946ef;border-radius:8px;padding:16px 20px;margin:20px 0;font-size:14px;color:#374151;line-height:1.6;white-space:pre-wrap;">${message}</div>` : '';
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f5f3ff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<div style="max-width:600px;margin:40px auto;background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.06);">
+
+  <div style="background:linear-gradient(135deg,#7c3aed 0%,#d946ef 100%);padding:36px 28px;text-align:center;">
+    <div style="color:white;font-size:28px;font-weight:800;letter-spacing:-0.5px;margin-bottom:6px;">⚡ LILIWATT</div>
+    <div style="color:rgba(255,255,255,0.85);font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;">Invitation au briefing</div>
+  </div>
+
+  <div style="padding:36px 32px;">
+    <p style="color:#1e1b4b;font-size:17px;font-weight:600;margin:0 0 18px;">Bonjour ${vendeur_prenom},</p>
+    <p style="color:#4b5563;font-size:15px;line-height:1.7;margin:0 0 26px;">
+      Votre referent <strong style="color:#1e1b4b;">${referent_prenom} ${referent_nom}</strong> vous convie a un briefing.
+    </p>
+
+    <div style="background:linear-gradient(135deg,#f5f3ff 0%,#fae8ff 100%);border-left:4px solid #7c3aed;border-radius:14px;padding:26px 28px;margin:0 0 24px;position:relative;">
+      <div style="position:absolute;top:20px;right:20px;font-size:32px;">📅</div>
+      <div style="color:#7c3aed;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Rendez-vous</div>
+      <div style="color:#1e1b4b;font-size:24px;font-weight:800;letter-spacing:-0.5px;margin-bottom:18px;line-height:1.2;text-transform:capitalize;">${date}</div>
+      <div style="display:inline-block;background:white;border:2px solid #7c3aed;border-radius:10px;padding:10px 18px;color:#7c3aed;font-size:20px;font-weight:800;letter-spacing:1px;">⏰ ${time}</div>
+    </div>
+
+    ${customMsg}
+    ${meetBtn}
+
+    <div style="background:#faf5ff;border:1px dashed #d946ef;border-radius:10px;padding:16px 20px;font-size:13px;color:#6b7280;line-height:1.6;margin-top:28px;text-align:center;">
+      💬 Cette invitation est egalement visible dans votre messagerie CRM LILIWATT.
+    </div>
+  </div>
+
+  <div style="background:#1e1b4b;padding:24px 28px;text-align:center;">
+    <div style="color:rgba(255,255,255,0.8);font-size:13px;font-weight:600;margin-bottom:4px;">⚡ LILIWATT</div>
+    <div style="color:rgba(255,255,255,0.55);font-size:11px;letter-spacing:1px;">Courtage Energie B2B</div>
+  </div>
+
+</div>
+</body></html>`;
+}

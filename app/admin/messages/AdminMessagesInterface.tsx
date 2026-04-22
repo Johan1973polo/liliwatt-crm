@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { mutate } from 'swr';
 import Image from 'next/image';
 
 interface User {
@@ -40,6 +41,13 @@ export default function AdminMessagesInterface({
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  useEffect(() => {
+    // Marquer messages comme lus + invalider badge SWR
+    fetch('/api/messages/mark-read', { method: 'POST' })
+      .then(() => mutate('/api/messages/count-unread'))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     scrollToBottom();

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { mutate } from 'swr';
 
 interface TeamActivity {
   id: string;
@@ -36,10 +37,11 @@ export default function PerformancesFeed() {
   };
 
   useEffect(() => {
-    // Marquer toutes les notifications comme lues au chargement de la page
-    fetch('/api/notifications/mark-all-read', { method: 'POST' }).catch(() => {
-      // Ignorer les erreurs silencieusement
-    });
+    // Marquer les performances comme lues + invalider le badge SWR
+    fetch('/api/activities/mark-read', { method: 'POST' })
+      .then(() => mutate('/api/activities/count-new'))
+      .catch(() => {});
+    fetch('/api/notifications/mark-all-read', { method: 'POST' }).catch(() => {});
 
     loadActivities();
 
