@@ -48,6 +48,8 @@ model User {
   declarations           Declaration[]
   quizResults            QuizResult[]
   audioFiles             AudioFile[]
+  referentAnnouncements  ReferentAnnouncement[] @relation("ReferentAnnouncements")
+  announcementReads      AnnouncementRead[]     @relation("AnnouncementReads")
 
   @@index([email])
   @@index([referentId])
@@ -366,6 +368,31 @@ model Demande {
 
   @@index([targetEmail, readByReferent])
   @@index([fromEmail])
+}
+
+model ReferentAnnouncement {
+  id         String   @id @default(cuid())
+  referentId String
+  referent   User     @relation("ReferentAnnouncements", fields: [referentId], references: [id])
+  title      String
+  message    String   @db.Text
+  createdAt  DateTime @default(now())
+  reads      AnnouncementRead[]
+
+  @@index([referentId])
+  @@index([createdAt])
+}
+
+model AnnouncementRead {
+  id             String               @id @default(cuid())
+  announcementId String
+  announcement   ReferentAnnouncement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User                 @relation("AnnouncementReads", fields: [userId], references: [id])
+  readAt         DateTime             @default(now())
+
+  @@unique([announcementId, userId])
+  @@index([userId])
 }
 
 model Declaration {

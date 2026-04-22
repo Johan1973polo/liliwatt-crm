@@ -47,3 +47,17 @@ export function renderEmailFinCollaboration({ referent, vendeur, date_fin, motif
     ${block('Détails', row('Date de fin', date_fin) + row('Motif', motif) + `<tr><td colspan="2" style="padding:8px 0;color:#374151;line-height:1.6;">${commentaire || 'Aucun commentaire'}</td></tr>`)}
   `);
 }
+
+export function renderEmailAnnonceReferent({ vendeur_prenom, referent_prenom, referent_nom, referent_lien_visio, title, message, date }: any) {
+  const meetBtn = referent_lien_visio ? `<div style="text-align:center;margin:24px 0;"><a href="${referent_lien_visio}" style="display:inline-block;background:linear-gradient(135deg,#7c3aed,#d946ef);color:white;padding:14px 28px;border-radius:12px;text-decoration:none;font-weight:700;font-size:14px;">🎥 Rejoindre le salon de ${referent_prenom}</a></div>` : '';
+  return wrap(`
+    <p style="color:#1e1b4b;font-size:16px;font-weight:600;margin:0 0 16px;">Bonjour ${vendeur_prenom},</p>
+    <p style="color:#4b5563;font-size:14px;line-height:1.7;margin:0 0 22px;">Votre référent <strong>${referent_prenom} ${referent_nom}</strong> vous adresse l'annonce suivante :</p>
+    <div style="background:#f5f3ff;border-left:4px solid #7c3aed;border-radius:12px;padding:22px 24px;margin:0 0 24px;">
+      <div style="color:#7c3aed;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">📢 ${date}</div>
+      <div style="color:#1e1b4b;font-size:20px;font-weight:700;letter-spacing:-0.3px;margin-bottom:14px;line-height:1.3;">${title}</div>
+      <div style="color:#374151;font-size:14px;line-height:1.7;white-space:pre-wrap;">${message}</div>
+    </div>
+    ${meetBtn}
+  `);
+}
