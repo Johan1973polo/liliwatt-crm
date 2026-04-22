@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar';
 import AutoRefresh from '@/components/AutoRefresh';
 import ChallengeAlert from './ChallengeAlert';
 import MessageBlock from './MessageBlock';
-import RequestsBlock from './RequestsBlock';
+import DemandesBlock from './DemandesBlock';
 import TeamActivityFeed from './TeamActivityFeed';
 import QuickAccessCards from './QuickAccessCards';
 import VendeurIdentifiants from './VendeurIdentifiants';
@@ -70,7 +70,7 @@ export default async function VendeurPage() {
   // Récupérer le numéro de courtier
   const currentUser = await prisma.user.findUnique({
     where: { id: userId },
-    select: { courtierNumber: true },
+    select: { courtierNumber: true, firstName: true, lastName: true },
   });
 
   // Compter les notifications de performances non lues
@@ -139,7 +139,7 @@ export default async function VendeurPage() {
           <div className="col-lg-6">
             <TeamOnlineStatus />
             <MessageBlock referent={referent} />
-            <RequestsBlock referentId={referentId || null} />
+            <DemandesBlock userRole={session.user.role} userEmail={session.user.email} userPrenom={currentUser?.firstName || ''} userNom={currentUser?.lastName || ''} />
           </div>
         </div>
       </div>

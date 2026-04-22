@@ -9,6 +9,7 @@ import LinksBlock from '../vendeur/LinksBlock';
 import QuickAccessCards from '../vendeur/QuickAccessCards';
 import MarchesEnergie from '@/components/MarchesEnergie';
 import DeclarationButtons from '../vendeur/DeclarationButtons';
+import DemandesBlock from '../vendeur/DemandesBlock';
 import AutoRefresh from '@/components/AutoRefresh';
 
 export const revalidate = 0;
@@ -93,6 +94,7 @@ export default async function ReferentPage() {
           </div>
           <div className="col-md-6">
             <VendeurIdentifiants />
+            <DemandesBlock userRole={session.user.role} userEmail={session.user.email} userPrenom="" userNom="" />
           </div>
         </div>
 
