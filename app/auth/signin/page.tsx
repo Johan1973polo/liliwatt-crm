@@ -83,9 +83,9 @@ export default function SignInPage() {
         </div>
 
         <div className="brand-stats fade-up fade-up-4">
-          <div className="stat"><span className="stat-value">50+</span><span className="stat-label">Fournisseurs</span></div>
-          <div className="stat"><span className="stat-value">IA</span><span className="stat-label">Extraction facture</span></div>
-          <div className="stat"><span className="stat-value">24/7</span><span className="stat-label">Disponibilité</span></div>
+          <div className="stat"><span className="stat-value">ENEDIS</span><span className="stat-label">Source officielle</span></div>
+          <div className="stat"><span className="stat-value">J+1</span><span className="stat-label">Donnees marche temps reel</span></div>
+          <div className="stat"><span className="stat-value">24/7</span><span className="stat-label">Disponibilite</span></div>
         </div>
       </section>
 
@@ -165,12 +165,12 @@ export default function SignInPage() {
         .brand-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(217,70,239,0.15);border:1px solid rgba(217,70,239,0.3);border-radius:100px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#f0abfc;margin-bottom:22px}
         .brand-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:#d946ef;box-shadow:0 0 12px #d946ef;animation:pulse 2s ease-in-out infinite}
         @keyframes pulse{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
-        .brand-title{font-family:var(--font-syne),sans-serif;font-weight:700;font-size:clamp(38px,4vw,56px);line-height:1.05;letter-spacing:-1.5px;margin-bottom:18px}
+        .brand-title{font-family:var(--font-syne),sans-serif;font-weight:700;font-size:clamp(38px,4vw,56px);line-height:1.05;letter-spacing:-1.5px;margin-bottom:18px;color:#ffffff}
         .accent{background:linear-gradient(135deg,#d946ef 0%,#f0abfc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:italic}
         .brand-subtitle{font-size:17px;line-height:1.65;color:rgba(255,255,255,0.72);max-width:460px}
         .brand-stats{position:relative;z-index:2;display:flex;gap:40px;padding-top:28px;border-top:1px solid rgba(255,255,255,0.1)}
         .stat{display:flex;flex-direction:column;gap:4px}
-        .stat-value{font-family:var(--font-syne),sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.5px;background:linear-gradient(135deg,#fff 0%,#d946ef 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .stat-value{font-family:var(--font-syne),sans-serif;font-weight:700;font-size:24px;letter-spacing:-0.5px;background:linear-gradient(135deg,#fff 0%,#d946ef 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .stat-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.5)}
         .form-panel{background:#ffffff;display:flex;align-items:center;justify-content:center;padding:48px 32px;position:relative}
         .form-panel::before{content:'';position:absolute;top:0;left:0;width:120px;height:120px;background:linear-gradient(135deg,rgba(124,58,237,0.1) 0%,transparent 70%);border-radius:0 0 100px 0}
