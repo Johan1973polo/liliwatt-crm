@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
   try {
     await sendEmail({
-      to: 'recrutement@liliwatt.fr',
+      to: 'bo@liliwatt.fr',
       subject: `👋 Fin de collaboration — ${vendeur_nom || vendeur_email}`,
       html: renderEmailFinCollaboration({
         referent: { nom: `${user?.firstName || ''} ${user?.lastName || ''}`.trim(), email: session.user.email },

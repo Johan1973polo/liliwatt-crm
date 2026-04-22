@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
   try {
     await sendEmail({
-      to: 'recrutement@liliwatt.fr',
+      to: 'bo@liliwatt.fr',
       subject: `🤝 Nouvelle recommandation — ${prenom} ${nom}`,
       html: renderEmailParrainage({
         auteur: `${user?.firstName || ''} ${user?.lastName || ''}`.trim(),

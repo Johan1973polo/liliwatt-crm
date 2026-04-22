@@ -58,12 +58,10 @@ export default function Navbar({
   const { data: msgData } = useSWR('/api/messages/count-unread', fetcher, swrOpts);
   const { data: perfData } = useSWR('/api/activities/count-new', fetcher, swrOpts);
   const { data: annData } = useSWR('/api/referent/announcements/count-unread', fetcher, swrOpts);
-  const { data: demData } = useSWR('/api/demandes/count-unread', fetcher, swrOpts);
 
   const liveMsg = msgData?.count || notificationCount;
   const livePerf = perfData?.count || performancesActivityCount;
   const liveAnn = annData?.count || 0;
-  const liveDem = demData?.count || 0;
 
   const getRoleLabel = (role: string) => {
     switch (role) {
@@ -99,7 +97,6 @@ export default function Navbar({
           label: 'Gestion',
           icon: 'bi-gear',
           items: [
-            { href: '/admin/demandes', label: 'Demandes', icon: 'bi-clipboard2-check', count: liveDem, badgeColor: 'primary' },
             { href: '/admin/messages', label: 'Messagerie', icon: 'bi-chat-dots', count: liveMsg, badgeColor: 'primary' },
             { href: '/admin/echanges', label: 'Échanges', icon: 'bi-eye' },
             { href: '/admin/links', label: 'Liens Globaux', icon: 'bi-link-45deg' },

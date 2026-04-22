@@ -90,7 +90,14 @@ export default function AdminsList({ admins, currentUserId }: AdminsListProps) {
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="flex-grow-1">
                     <div className="d-flex align-items-center mb-1">
-                      <i className="bi bi-person-circle text-primary me-2"></i>
+                      <div style={{
+                        width: '36px', height: '36px', borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #7c3aed, #d946ef)',
+                        color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontWeight: 700, fontSize: '13px', marginRight: '10px', flexShrink: 0,
+                      }}>
+                        {admin.email.substring(0, 2).toUpperCase()}
+                      </div>
                       <strong>{admin.email}</strong>
                       {admin.specialty && (
                         <span className="badge bg-info ms-2">{admin.specialty}</span>

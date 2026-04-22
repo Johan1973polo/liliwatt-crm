@@ -35,9 +35,9 @@ export async function GET() {
     orderBy: [{ scope: 'asc' }, { order: 'asc' }],
   });
 
-  // Lien RGPD pour les vendeurs (stocke dans Credential serviceName=RGPD, login=url)
+  // Lien RGPD pour les vendeurs et referents (stocke dans Credential serviceName=RGPD, login=url)
   let rgpdLink: string | null = null;
-  if (user.role === 'VENDEUR') {
+  if (user.role === 'VENDEUR' || user.role === 'REFERENT') {
     const rgpdCred = await prisma.credential.findFirst({
       where: { userId: user.id, serviceName: 'RGPD' },
       select: { login: true },

@@ -2,16 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-
-const availableAvatars = [
-  '/avatars/Akim.png',
-  '/avatars/Kevin.png',
-  '/avatars/Manu.png',
-  '/avatars/Sabir.png',
-  '/avatars/johan.png',
-  '/avatars/olivier.png',
-];
 
 export default function CreateAdminForm() {
   const router = useRouter();
@@ -19,7 +9,6 @@ export default function CreateAdminForm() {
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [specialty, setSpecialty] = useState('');
-  const [avatar, setAvatar] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -32,195 +21,72 @@ export default function CreateAdminForm() {
       const response = await fetch('/api/admin/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-          phone,
-          specialty: specialty || null,
-          avatar: avatar || null
-        }),
+        body: JSON.stringify({ email, password, phone, specialty: specialty || null, avatar: null }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        alert('✅ Administrateur créé avec succès !');
-        setEmail('');
-        setPassword('');
-        setPhone('');
-        setSpecialty('');
-        setAvatar('');
+        alert('Administrateur cree avec succes !');
+        setEmail(''); setPassword(''); setPhone(''); setSpecialty('');
         router.refresh();
       } else {
-        setError(data.error || 'Erreur lors de la création');
+        setError(data.error || 'Erreur lors de la creation');
       }
-    } catch (err) {
-      setError('Erreur lors de la création');
+    } catch {
+      setError('Erreur lors de la creation');
     } finally {
       setLoading(false);
     }
   };
 
+  const labelStyle = { fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' as const, letterSpacing: '1px', marginBottom: '6px', display: 'block' };
+  const inputStyle = { width: '100%', padding: '12px 16px', border: '1px solid #e5e7eb', borderRadius: '10px', fontSize: '14px' };
+
   return (
-    <div className="card">
-      <div className="card-header bg-primary text-white">
-        <h5 className="mb-0">
-          <i className="bi bi-person-plus me-2"></i>
-          Créer un nouvel administrateur
-        </h5>
-      </div>
-      <div className="card-body">
-        {error && (
-          <div className="alert alert-danger" role="alert">
-            {error}
-          </div>
-        )}
+    <div style={{ background: 'white', borderRadius: '14px', padding: '28px', border: '1px solid #e5e7eb' }}>
+      <h5 style={{ fontSize: '16px', fontWeight: 700, color: '#1e1b4b', marginBottom: '20px' }}>
+        <i className="bi bi-person-plus me-2"></i>Creer un administrateur
+      </h5>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label fw-semibold">
-              <i className="bi bi-envelope me-2"></i>
-              Email
-            </label>
-            <input
-              type="email"
-              className="form-control"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={loading}
-              placeholder="admin@liliwatt.fr"
-            />
-          </div>
+      {error && <div className="alert alert-danger">{error}</div>}
 
-          <div className="mb-3">
-            <label htmlFor="password" className="form-label fw-semibold">
-              <i className="bi bi-lock me-2"></i>
-              Mot de passe
-            </label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={loading}
-              placeholder="••••••••"
-              minLength={6}
-            />
-            <small className="text-muted">
-              Minimum 6 caractères
-            </small>
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="phone" className="form-label fw-semibold">
-              <i className="bi bi-telephone me-2"></i>
-              Téléphone (optionnel)
-            </label>
-            <input
-              type="tel"
-              className="form-control"
-              id="phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              disabled={loading}
-              placeholder="+33 6 12 34 56 78"
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="specialty" className="form-label fw-semibold">
-              <i className="bi bi-award me-2"></i>
-              Spécialisation (optionnel)
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="specialty"
-              value={specialty}
-              onChange={(e) => setSpecialty(e.target.value)}
-              disabled={loading}
-              placeholder="Ex: PRÉSIDENT, DIRECTION COMMERCIALE, etc."
-            />
-            <small className="text-muted">
-              La spécialisation sera affichée dans la liste des administrateurs et la messagerie
-            </small>
-          </div>
-
-          <div className="mb-4">
-            <label className="form-label fw-semibold">
-              <i className="bi bi-person-bounding-box me-2"></i>
-              Photo de profil (optionnel)
-            </label>
-            <div className="row g-2">
-              {availableAvatars.map((avatarPath) => {
-                const avatarName = avatarPath.split('/').pop()?.replace('.png', '');
-                const isSelected = avatar === avatarPath;
-
-                return (
-                  <div key={avatarPath} className="col-4 col-md-4">
-                    <button
-                      type="button"
-                      onClick={() => setAvatar(avatarPath)}
-                      disabled={loading}
-                      className={`btn w-100 p-2 ${
-                        isSelected ? 'btn-primary' : 'btn-outline-secondary'
-                      }`}
-                    >
-                      <Image
-                        src={avatarPath}
-                        alt={avatarName || 'Avatar'}
-                        width={60}
-                        height={60}
-                        className="rounded-circle mb-1"
-                        style={{ objectFit: 'cover', width: '100%', height: 'auto' }}
-                      />
-                      <small className="d-block text-truncate">{avatarName}</small>
-                    </button>
-                  </div>
-                );
-              })}
-              <div className="col-4 col-md-4">
-                <button
-                  type="button"
-                  onClick={() => setAvatar('')}
-                  disabled={loading}
-                  className={`btn w-100 p-2 ${
-                    !avatar ? 'btn-primary' : 'btn-outline-secondary'
-                  }`}
-                >
-                  <div
-                    className="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-1 mx-auto"
-                    style={{ width: '60px', height: '60px' }}
-                  >
-                    <i className="bi bi-person-fill text-white" style={{ fontSize: '1.5rem' }}></i>
-                  </div>
-                  <small className="d-block">Aucun</small>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="d-grid">
-            <button
-              type="submit"
-              className="btn btn-primary btn-lg"
-              disabled={loading}
-            >
-              <i className="bi bi-person-plus me-2"></i>
-              {loading ? 'Création en cours...' : 'Créer l\'administrateur'}
-            </button>
-          </div>
-        </form>
-
-        <div className="alert alert-info mt-4 mb-0">
-          <i className="bi bi-info-circle me-2"></i>
-          <strong>Note :</strong> Les nouveaux administrateurs auront accès à toutes les fonctionnalités d&apos;administration.
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: '18px' }}>
+          <label style={labelStyle}>Email *</label>
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+            placeholder="prenom.nom@liliwatt.fr" required disabled={loading} style={inputStyle} />
         </div>
-      </div>
+
+        <div style={{ marginBottom: '18px' }}>
+          <label style={labelStyle}>Mot de passe *</label>
+          <input type="password" value={password} onChange={e => setPassword(e.target.value)}
+            placeholder="Minimum 8 caracteres" required minLength={8} disabled={loading} style={inputStyle} />
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '22px' }}>
+          <div>
+            <label style={labelStyle}>Telephone</label>
+            <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
+              placeholder="+33 6 XX XX XX XX" disabled={loading} style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>Specialisation</label>
+            <input type="text" value={specialty} onChange={e => setSpecialty(e.target.value)}
+              placeholder="Ex : Direction commerciale" disabled={loading} style={inputStyle} />
+          </div>
+        </div>
+
+        <button type="submit" disabled={loading} style={{
+          width: '100%', padding: '14px',
+          background: 'linear-gradient(135deg, #7c3aed, #d946ef)',
+          color: 'white', border: 'none', borderRadius: '12px',
+          fontWeight: 700, fontSize: '14px', cursor: 'pointer',
+          letterSpacing: '0.5px', opacity: loading ? 0.6 : 1,
+        }}>
+          {loading ? 'Creation en cours...' : 'Creer l\'administrateur'}
+        </button>
+      </form>
     </div>
   );
 }
